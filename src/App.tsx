@@ -19,7 +19,7 @@ function App() {
   return (
     <AppContainer>
       <div className="p-4 mx-auto bg-white shadow-lg rounded-xl w-full lg:w-1/3 xl:w-1/3">
-        <Header title="Welcome to Lesson 5 #react-typescript with #tailwindcss" />
+        <Header title="Welcome to #react-typescript with #tailwindcss" />
         {state === "HOME" ? (
           <Home openFormCB={openForm} />
         ) : (
