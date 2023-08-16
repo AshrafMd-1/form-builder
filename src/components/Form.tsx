@@ -105,7 +105,7 @@ export default function Form(props: { closeFormCB: () => void }) {
           Close Form
         </button>
         <button
-          className="bg-red-500 text-white px-4 py-2 rounded-xl active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"
+          className="bg-red-500 font-bold text-white px-4 py-2 rounded-xl active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"
           onClick={clearForm}
         >
           Clear Form
