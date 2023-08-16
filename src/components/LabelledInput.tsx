@@ -16,8 +16,8 @@ export default function LabelledInput(props: {
       <div className="flex">
         <input
           className="input p-3 block input-bordered input-sm mt-1 mb-1  w-full hover:outline-none focus:outline-none"
-          type={props.type}
           value={props.value}
+          type={props.type}
           onChange={(e) => props.controlFieldCB(props.id, e.target.value)}
         />
         <button
