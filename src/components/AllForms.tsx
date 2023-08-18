@@ -11,7 +11,7 @@ export const AllForms = (prop: {
     <div className="p-4 border bg-gray-300 border-gray-300 mb-3 rounded-lg shadow-md">
       <div className="text-xl font-bold text-center">Saved Forms</div>
       <div className="flex flex-col justify-center items-center">
-        <div className="flex flex-wrap m-2">
+        <div className="flex flex-wrap m-2 justify-center">
           {prop.localStorage.map((form: formData) => (
             <div
               key={form.id}
@@ -20,13 +20,13 @@ export const AllForms = (prop: {
               <p className="text-l font-bold">{form.title}</p>
               <div className="flex justify-center items-center">
                 <button
-                  className="bg-amber-300 ml-2 rounded-lg hover:bg-amber-400  p-1"
+                  className="bg-amber-400 ml-2 rounded-lg hover:bg-amber-500  p-1"
                   onClick={(_) => prop.selectFormCB(form)}
                 >
                   🖋️
                 </button>
                 <button
-                  className=" bg-red-400 ml-1 rounded-lg hover:bg-red-500 hover:text-white p-1"
+                  className="bg-red-500 ml-1 rounded-lg hover:bg-red-600 hover:text-white p-1"
                   onClick={(_) => prop.removeFormCB(form.id)}
                 >
                   <svg
