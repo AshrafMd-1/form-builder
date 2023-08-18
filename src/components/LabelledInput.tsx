@@ -21,7 +21,7 @@ export default function LabelledInput(props: {
           onChange={(e) => props.controlFieldCB(props.id, e.target.value)}
         />
         <button
-          className="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-3 py-2 mt-auto mb-auto focus:outline-none focus:shadow-outline-red active:bg-red-500"
+          className="ml-2 bg-blue-500 hover:bg-red-600 text-white font-bold rounded-lg px-3 py-2 mt-auto mb-auto focus:outline-none focus:shadow-outline-red active:bg-red-500"
           onClick={() => props.removeFieldCB(props.id)}
         >
           Remove
