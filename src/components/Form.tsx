@@ -84,7 +84,7 @@ export default function Form(props: { closeFormCB: () => void }) {
         <input
           type="text"
           value={newField}
-          className="input p-3 block input-bordered input-sm mt-1 mb-1  w-full hover:outline-none focus:outline-none"
+          className="border-2 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
           placeholder="New Field Title"
           onChange={(e) => {
             setNewField(e.target.value);

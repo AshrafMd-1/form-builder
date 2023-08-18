@@ -13,15 +13,15 @@ export default function LabelledInput(props: {
       <label className="text-xl font-normal pl-1 text-center">
         {props.label}
       </label>
-      <div className="flex">
+      <div className="flex items-center">
         <input
-          className="input p-3 block input-bordered input-sm mt-1 mb-1  w-full hover:outline-none focus:outline-none"
+          className="border-2 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
           value={props.value}
           type={props.type}
           onChange={(e) => props.controlFieldCB(props.id, e.target.value)}
         />
         <button
-          className="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-3 rounded-lg focus:outline-none focus:shadow-outline-red active:bg-red-500"
+          className="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-3 py-2 mt-auto mb-auto focus:outline-none focus:shadow-outline-red active:bg-red-500"
           onClick={() => props.removeFieldCB(props.id)}
         >
           Remove
