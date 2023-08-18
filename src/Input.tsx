@@ -20,7 +20,7 @@ const Input = (props: { field: string; type: string }) => {
       <input
         type={props.type}
         placeholder={"Please type your " + props.field}
-        className="input p-3 block input-bordered input-m mt-1 mb-1  w-full hover:outline-none focus:outline-none"
+        className="border-2 border-gray-300 rounded-md mb-3 mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
         onSelect={handleInput}
       />
     </>
