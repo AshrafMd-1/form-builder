@@ -14,7 +14,7 @@ const formFields = [
 function App() {
   return (
     <AppContainer>
-      <div className="p-5 mx-auto bg-white shadow-lg rounded-xl">
+      <div className="p-5 mx-auto max-w-2xl bg-white shadow-lg rounded-xl">
         <Header
           title={"Welcome to Lesson 5 #react-typescript with #tailwindcss"}
         />
