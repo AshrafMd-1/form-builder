@@ -230,6 +230,9 @@ export default function Form(props: { closeFormCB: () => void }) {
           <button
             onClick={(_) => {
               saveFormData(state);
+              setState({
+                ...state,
+              });
             }}
             className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-green active:bg-green-800"
           >
