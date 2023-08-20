@@ -1,6 +1,7 @@
 export interface formInfo {
   id: number;
   title: string;
+  question: number;
 }
 
 export interface formData {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AllForms } from "./AllForms";
 import { getLocalForms, initialFormFields, saveLocalForms } from "./utils";
-import { useQueryParams } from "raviger";
+import { navigate, useQueryParams } from "raviger";
 
 const getAllForms = () => {
   const localForms = getLocalForms();
@@ -9,6 +9,7 @@ const getAllForms = () => {
     return {
       id: form.id,
       title: form.title,
+      question: form.formFields.length,
     };
   });
 };
@@ -20,24 +21,22 @@ export default function Home() {
 
   const addForm = () => {
     const localForms = getLocalForms();
+    const id = Number(new Date());
     const newForm = {
-      id: Number(new Date()),
+      id: id,
       title: "Untitled Form",
       formFields: initialFormFields,
     };
     saveLocalForms([...localForms, newForm]);
     setState(getAllForms());
-    setSearchString("");
-    setQuery({ search: "" });
+    navigate("/forms/" + id);
   };
 
   const removeForm = (id: number) => {
     const localForms = getLocalForms();
-    if (localForms.length > 1) {
-      const newLocalForms = localForms.filter((form) => form.id !== id);
-      saveLocalForms(newLocalForms);
-      setState(getAllForms());
-    }
+    const newLocalForms = localForms.filter((form) => form.id !== id);
+    saveLocalForms(newLocalForms);
+    setState(getAllForms());
   };
 
   return (

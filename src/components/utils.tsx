@@ -36,3 +36,11 @@ export const getLocalForms: () => formData[] = () => {
 export const saveLocalForms = (localForm: formData[]) => {
   localStorage.setItem("savedForms", JSON.stringify(localForm));
 };
+
+export const saveFormData = (currentState: formData) => {
+  const localForms = getLocalForms();
+  const updateLocalForms = localForms.map((form) =>
+    form.id === currentState.id ? currentState : form,
+  );
+  saveLocalForms(updateLocalForms);
+};
