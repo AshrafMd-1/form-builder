@@ -1,72 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import LabelledInput from "./LabelledInput";
-import { AllForms } from "./AllForms";
+import { getLocalForms, saveLocalForms } from "./utils";
+import { formData, formField } from "./types";
 
-export interface formData {
-  id: number;
-  title: string;
-  formFields: formField[];
-}
-
-interface formField {
-  id: number;
-  label: string;
-  type: string;
-  value: string;
-}
-
-const initialFormFields: formField[] = [
-  { id: 1, label: "First Name", type: "text", value: "" },
-  {
-    id: 2,
-    label: "Last Name",
-    type: "text",
-    value: "",
-  },
-  {
-    id: 3,
-    label: "Email",
-    type: "email",
-    value: "",
-  },
-  {
-    id: 4,
-    label: "Date of Birth",
-    type: "date",
-    value: "",
-  },
-  {
-    id: 5,
-    label: "Phone Number",
-    type: "text",
-    value: "",
-  },
-];
-
-const getLocalForms: () => formData[] = () => {
-  const savedFormsJSON = localStorage.getItem("savedForms");
-  return savedFormsJSON ? JSON.parse(savedFormsJSON) : [];
-};
-
-const initialState: () => formData = () => {
+export const getFormBasedOnID = (id: number) => {
   const localForms = getLocalForms();
-  if (localForms.length > 0) {
-    return localForms[0];
-  }
-  const newForm = {
-    id: Number(new Date()),
-    title: "Untitled Form",
-    formFields: initialFormFields,
-  };
-  saveLocalForms([...localForms, newForm]);
-  return newForm;
+  return localForms.find((form) => form.id === id);
 };
 
-const saveLocalForms = (localForm: formData[]) => {
-  localStorage.setItem("savedForms", JSON.stringify(localForm));
-};
-
-const saveFormData = (currentState: formData) => {
+export const saveFormData = (currentState: formData) => {
   const localForms = getLocalForms();
   const updateLocalForms = localForms.map((form) =>
     form.id === currentState.id ? currentState : form,
@@ -74,14 +16,18 @@ const saveFormData = (currentState: formData) => {
   saveLocalForms(updateLocalForms);
 };
 
-export default function Form(props: { closeFormCB: () => void }) {
-  const [state, setState] = useState(() => initialState());
+export default function Form(props: { formId: number }) {
+  const [state, setState] = useState(() => {
+    const form = getFormBasedOnID(props.formId);
+    return form ? form : getLocalForms()[0];
+  });
   const [newField, setNewField] = useState("");
   const titleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     console.log("Component Mounted");
     document.title = "Form Editor";
+
     titleRef.current?.focus();
     return () => {
       document.title = "React App";
@@ -97,16 +43,6 @@ export default function Form(props: { closeFormCB: () => void }) {
       clearTimeout(timeout);
     };
   }, [state]);
-  const addForm = () => {
-    const localForms = getLocalForms();
-    const newForm = {
-      id: Number(new Date()),
-      title: "Untitled Form",
-      formFields: initialFormFields,
-    };
-    saveLocalForms([...localForms, newForm]);
-    setState(newForm);
-  };
 
   const addField = () => {
     setState({
@@ -124,33 +60,19 @@ export default function Form(props: { closeFormCB: () => void }) {
     setNewField("");
   };
 
-  const removeForm = (id: number) => {
-    const localForms = getLocalForms();
-    if (localForms.length > 1) {
-      const newLocalForms = localForms.filter((form) => form.id !== id);
-      if (state.id === id) {
-        setState(newLocalForms[0]);
-      } else {
-        const currentFormIndex = newLocalForms.findIndex(
-          (form) => form.id === state.id,
-        );
-        setState(newLocalForms[currentFormIndex]);
-      }
-      saveLocalForms(newLocalForms);
-    }
-  };
-
   const removeField = (id: number) => {
     setState({
       ...state,
-      formFields: state.formFields.filter((field) => field.id !== id),
+      formFields: state.formFields.filter(
+        (field: formField) => field.id !== id,
+      ),
     });
   };
 
   const clearForm = () => {
     setState({
       ...state,
-      formFields: state.formFields.map((field) => ({
+      formFields: state.formFields.map((field: formField) => ({
         ...field,
         value: "",
       })),
@@ -169,7 +91,7 @@ export default function Form(props: { closeFormCB: () => void }) {
   const fieldChangeHandler = (id: number, value: string) => {
     setState({
       ...state,
-      formFields: state.formFields.map((field) =>
+      formFields: state.formFields.map((field: formField) =>
         field.id === id ? { ...field, value } : field,
       ),
     });
@@ -177,19 +99,13 @@ export default function Form(props: { closeFormCB: () => void }) {
 
   return (
     <>
-      <AllForms
-        localStorage={getLocalForms()}
-        selectFormCB={(form: formData) => setState(form)}
-        addFormCB={addForm}
-        removeFormCB={removeForm}
-      />
       <div className="p-4 border border-gray-300 rounded-lg shadow-md">
         <div>
           <input
             type="text"
             value={state.title}
-            className="input p-3 block input-bordered input-sm mt-1 mb-1  w-full hover:outline-none focus:outline-none"
-            placeholder="New Field Title"
+            className="border-2 mb-1 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
+            placeholder="New Form Title"
             onChange={(e) => {
               changeTitle(e.target.value);
             }}
@@ -197,7 +113,7 @@ export default function Form(props: { closeFormCB: () => void }) {
           />
         </div>
 
-        {state.formFields.map((field) => (
+        {state.formFields.map((field: formField) => (
           <LabelledInput
             id={field.id}
             key={field.id}
@@ -213,7 +129,7 @@ export default function Form(props: { closeFormCB: () => void }) {
           <input
             type="text"
             value={newField}
-            className="input p-3 block input-bordered input-sm mt-1 mb-1  w-full hover:outline-none focus:outline-none"
+            className="border-2 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
             placeholder="New Field Title"
             onChange={(e) => {
               setNewField(e.target.value);
@@ -235,12 +151,12 @@ export default function Form(props: { closeFormCB: () => void }) {
           >
             Save
           </button>
-          <button
+          <a
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-            onClick={props.closeFormCB}
+            href="/"
           >
             Close Form
-          </button>
+          </a>
           <button
             className="bg-red-500 font-bold text-white px-4 py-2 rounded-xl active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red"
             onClick={clearForm}

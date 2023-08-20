@@ -1,21 +1,43 @@
-import React from "react";
-import logo from "../logo.svg";
+import React, { useState } from "react";
+import { AllForms } from "./AllForms";
+import { getLocalForms, initialFormFields, saveLocalForms } from "./utils";
 
-export default function Home(props: { openFormCB: () => void }) {
+const getAllForms = () => {
+  const localForms = getLocalForms();
+  return localForms.map((form) => {
+    return {
+      id: form.id,
+      title: form.title,
+    };
+  });
+};
+
+export default function Home() {
+  const [state, setState] = useState(() => getAllForms());
+
+  const addForm = () => {
+    const localForms = getLocalForms();
+    const newForm = {
+      id: Number(new Date()),
+      title: "Untitled Form",
+      formFields: initialFormFields,
+    };
+    saveLocalForms([...localForms, newForm]);
+    setState(getAllForms());
+  };
+
+  const removeForm = (id: number) => {
+    const localForms = getLocalForms();
+    if (localForms.length > 1) {
+      const newLocalForms = localForms.filter((form) => form.id !== id);
+      saveLocalForms(newLocalForms);
+      setState(getAllForms());
+    }
+  };
+
   return (
     <div className="flex flex-col justify-content">
-      <div className="flex">
-        <img className="h-48" src={logo} alt="" />
-        <div className="flex-1 flex justify-content items-center font-bold h-48">
-          <p>Welcome to Home Page</p>
-        </div>
-      </div>
-      <button
-        className="mt-4 block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-        onClick={props.openFormCB}
-      >
-        Open Form
-      </button>
+      <AllForms forms={state} addFormCB={addForm} removeFormCB={removeForm} />
     </div>
   );
 }

@@ -10,9 +10,23 @@ export const Header = (props: { title: string }) => {
         alt="logo"
         style={{ animation: "spin 2s linear infinite" }}
       />
-      <h1 className="ml-3 font-medium text-center text-2xl flex-1">
+      <div className="flex gap-2 items-center">
+        {[
+          { page: "Home", url: "/" },
+          { page: "About", url: "/about" },
+        ].map((link) => (
+          <a
+            key={link.url}
+            href={link.url}
+            className="text-grey-800 p-2 m-2 uppercase"
+          >
+            {link.page}
+          </a>
+        ))}
+      </div>
+      <div className="ml-auto mr-auto text-2xl text-center font-bold">
         {props.title}
-      </h1>
+      </div>
     </div>
   );
 };
