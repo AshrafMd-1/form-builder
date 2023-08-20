@@ -7,8 +7,14 @@ export const AllForms = (prop: {
   removeFormCB: (id: number) => void;
 }) => {
   return (
-    <div className="p-4 border bg-gray-300 border-gray-300 mb-3 rounded-lg shadow-md">
-      <div className="text-xl font-bold text-center">Saved Forms</div>
+    <div className="p-4 border  relative bg-gray-300 border-gray-300 mb-3 rounded-lg shadow-md">
+      <div className="text-xl font-bold text-center">All Forms</div>
+      <div className="absolute top-0 right-0 mr-3 mt-3 flex">
+        <div className="text-xl font-bold text-center">Count :</div>
+        <div className="text-xl font-bold text-center ml-2">
+          {prop.forms.length}
+        </div>
+      </div>
       <div className="flex flex-col justify-center items-center">
         <div className="flex flex-wrap m-2 justify-center">
           {prop.forms.map((form: formInfo) => (
