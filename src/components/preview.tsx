@@ -1,30 +1,26 @@
-import React, { useState } from "react";
-import { getLocalForms, saveFormData } from "./utils";
+import React, { useEffect, useState } from "react";
+import { getLocalForms } from "./utils";
 import { navigate } from "raviger";
 
 export default function Preview(props: { formId: number }) {
-  const [state, setState] = useState(
+  const [state] = useState(
     getLocalForms().filter((form) => form.id === props.formId)[0],
   );
-  const [stateIndex, setStateIndex] = useState(0);
-  const title = state.title;
 
-  const saveInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      formFields: state.formFields.map((formField) => {
-        if (formField.id === state.formFields[stateIndex].id) {
-          return {
-            ...formField,
-            value: String(e.target.value),
-          };
-        } else {
-          return formField;
-        }
-      }),
+  const [stateIndex, setStateIndex] = useState(0);
+  const [form, setForm] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    setForm((form) => {
+      const newForm = [...form];
+      newForm[stateIndex] = inputValue;
+      return newForm;
     });
-    saveFormData(state);
-  };
+    return () => {};
+  }, [stateIndex, inputValue]);
+
+  const title = state.title;
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -36,45 +32,48 @@ export default function Preview(props: { formId: number }) {
         <input
           className="border-2 mt-2 border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m focus:outline-none invalid:border-red-500"
           type={state.formFields[stateIndex].type}
-          value={state.formFields[stateIndex].value}
-          onChange={(e) => saveInputValue(e)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
         />
       </div>
       <div className="flex flex-row justify-center items-center">
         <button
-          className="border-2 bg-blue-600 text-white rounded-lg p-2 m-2 disabled:opacity-50 cursor-not-allowed"
-          {...(stateIndex === 0 && { disabled: true })}
+          className="border-2 text-white bg-green-500 rounded-lg p-2 m-2 disabled:hidden"
+          disabled={stateIndex !== 0}
+          onClick={() => navigate("/")}
+        >
+          Back
+        </button>
+        <button
+          className="border-2 bg-blue-600 text-white rounded-lg p-2 m-2 disabled:hidden"
+          disabled={stateIndex === 0}
           onClick={() => {
-            if (stateIndex > 0) {
-              setStateIndex(stateIndex - 1);
-            }
+            setStateIndex(stateIndex - 1);
+            if (form[stateIndex - 1]) setInputValue(form[stateIndex - 1]);
+            else setInputValue("");
           }}
         >
           Previous
         </button>
         <button
           className="border-2 text-white bg-blue-600 rounded-lg p-2 m-2 disabled:hidden"
-          {...(stateIndex === state.formFields.length - 1 && {
-            disabled: true,
-          })}
+          disabled={stateIndex === state.formFields.length - 1}
           onClick={() => {
-            if (stateIndex < state.formFields.length - 1) {
-              setStateIndex(stateIndex + 1);
-            }
+            setStateIndex(stateIndex + 1);
+            if (form[stateIndex + 1]) setInputValue(form[stateIndex + 1]);
+            else setInputValue("");
           }}
         >
           Next
         </button>
         <button
           className="border-2 text-white bg-green-500 rounded-lg p-2 m-2 disabled:hidden"
-          {...(stateIndex === state.formFields.length - 1
-            ? {
-                disabled: false,
-              }
-            : {
-                disabled: true,
-              })}
-          onClick={() => navigate("/")}
+          disabled={stateIndex !== state.formFields.length - 1}
+          onClick={() => {
+            setStateIndex(stateIndex + 1);
+            console.log(form);
+            navigate("/");
+          }}
         >
           Submit
         </button>
