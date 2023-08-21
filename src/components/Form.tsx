@@ -158,10 +158,17 @@ export default function Form(props: { formId: number }) {
             }}
           >
             <option value="text">Text</option>
-            <option value="number">Number</option>
             <option value="email">Email</option>
-            <option value="date">Date</option>
             <option value="password">Password</option>
+            <option value="number">Number</option>
+            <option value="date">Date</option>
+            <option value="time">Time</option>
+            <option value="url">Url</option>
+            <option value="tel">Tel</option>
+            <option value="color">Color</option>
+            <option value="datetime-local">Datetime-local</option>
+            <option value="month">Month</option>
+            <option value="week">Week</option>
             <option value="file">File</option>
           </select>
           <button

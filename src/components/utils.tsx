@@ -23,7 +23,7 @@ export const initialFormFields: formField[] = [
   {
     id: 5,
     label: "Phone Number",
-    type: "text",
+    type: "tel",
     value: "",
   },
 ];
