@@ -1,3 +1,5 @@
+import { Options } from "./utils";
+
 export default function LabelledInput(props: {
   label: string;
   type: string;
@@ -37,19 +39,7 @@ export default function LabelledInput(props: {
               props.typeChangeHandlerCB(props.id, e.target.value)
             }
           >
-            <option value="text">Text</option>
-            <option value="email">Email</option>
-            <option value="password">Password</option>
-            <option value="number">Number</option>
-            <option value="date">Date</option>
-            <option value="time">Time</option>
-            <option value="url">Url</option>
-            <option value="tel">Tel</option>
-            <option value="color">Color</option>
-            <option value="datetime-local">Datetime-local</option>
-            <option value="month">Month</option>
-            <option value="week">Week</option>
-            <option value="file">File</option>
+            <Options />
           </select>
         </div>
         <button

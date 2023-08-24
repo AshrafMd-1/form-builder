@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import LabelledInput from "./LabelledInput";
-import { getLocalForms, saveFormData } from "./utils";
+import { getLocalForms, Options, saveFormData } from "./utils";
 
 import { formField } from "./types";
 import { Link } from "raviger";
+import { Error } from "./Error";
 
 export const getFormBasedOnID = (id: number) => {
   const localForms = getLocalForms();
@@ -13,8 +14,15 @@ export const getFormBasedOnID = (id: number) => {
 export default function Form(props: { formId: number }) {
   const [state, setState] = useState(() => {
     const form = getFormBasedOnID(props.formId);
-    return form ? form : getLocalForms()[0];
+    return form
+      ? form
+      : {
+          id: 404,
+          title: "Wrong Form",
+          formFields: [],
+        };
   });
+
   const [newField, setNewField] = useState({
     type: "text",
     value: "",
@@ -40,6 +48,10 @@ export default function Form(props: { formId: number }) {
       clearTimeout(timeout);
     };
   }, [state]);
+
+  if (!state || state.id === 404) {
+    return <Error />;
+  }
 
   const addField = () => {
     setState({
@@ -156,24 +168,13 @@ export default function Form(props: { formId: number }) {
                 type: e.target.value,
               });
             }}
+            value={newField.type}
           >
-            <option value="text">Text</option>
-            <option value="email">Email</option>
-            <option value="password">Password</option>
-            <option value="number">Number</option>
-            <option value="date">Date</option>
-            <option value="time">Time</option>
-            <option value="url">Url</option>
-            <option value="tel">Tel</option>
-            <option value="color">Color</option>
-            <option value="datetime-local">Datetime-local</option>
-            <option value="month">Month</option>
-            <option value="week">Week</option>
-            <option value="file">File</option>
+            <Options />
           </select>
           <button
             className="mt-auto mb-auto ml-2 bg-blue-500 hover:bg-blue-600 text-white pl-3 pr-3 font-bold  rounded-lg focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-            onClick={addField}
+            onClick={() => addField()}
           >
             Add Field
           </button>

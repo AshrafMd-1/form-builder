@@ -1,4 +1,5 @@
 import { formData, formField } from "./types";
+import React from "react";
 
 export const initialFormFields: formField[] = [
   { id: 1, label: "First Name", type: "text", value: "" },
@@ -43,4 +44,21 @@ export const saveFormData = (currentState: formData) => {
     form.id === currentState.id ? currentState : form,
   );
   saveLocalForms(updateLocalForms);
+};
+
+export const Options = () => {
+  return (
+    <>
+      <option value="text">Text</option>
+      <option value="email">Email</option>
+      <option value="password">Password</option>
+      <option value="number">Number</option>
+      <option value="date">Date</option>
+      <option value="time">Time</option>
+      <option value="url">Url</option>
+      <option value="datetime-local">Datetime-local</option>
+      <option value="month">Month</option>
+      <option value="week">Week</option>
+    </>
+  );
 };

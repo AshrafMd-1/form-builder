@@ -40,17 +40,31 @@ export const AllForms = (prop: {
                   {form.title}
                 </p>
                 <div className="flex justify-center items-center">
-                  <div className=" font-bold text-center">
-                    Questions : {form.question}
-                  </div>
+                  {form.question === 0 ? (
+                    <div className="font-bold text-center  ">No Questions</div>
+                  ) : (
+                    <div className=" font-bold text-center">
+                      Questions : {form.question}
+                    </div>
+                  )}
                 </div>
                 <div className="flex col-span-2 justify-center items-center gap-2 flex-wrap">
-                  <Link
-                    href={"/preview/" + form.id}
-                    className="bg-green-500 font-bold  rounded-lg hover:bg-green-600 px-3 py-1 "
-                  >
-                    PREVIEW
-                  </Link>
+                  {form.question === 0 ? (
+                    <Link
+                      href={"/"}
+                      className="bg-green-500 font-bold  rounded-lg hover:bg-green-600 px-3 py-1 opacity-50 cursor-not-allowed"
+                    >
+                      No Preview
+                    </Link>
+                  ) : (
+                    <Link
+                      href={"/preview/" + form.id}
+                      className="bg-green-500 font-bold  rounded-lg hover:bg-green-600 px-3 py-1 "
+                    >
+                      PREVIEW
+                    </Link>
+                  )}
+
                   <Link
                     href={"/forms/" + form.id}
                     className="bg-amber-400 font-bold  rounded-lg hover:bg-amber-500 px-3 py-1 "
