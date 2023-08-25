@@ -19,7 +19,7 @@ export default function Preview(props: { formId: number }) {
           formFields: [],
         };
   });
-
+  console.log(state)
   const [stateFormFieldIndex, setStateFormFieldIndex] = useState(0);
   const [form, setForm] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -48,6 +48,7 @@ export default function Preview(props: { formId: number }) {
     setInputValue(value);
   }
 
+
   const renderField = (formValues: formField) => {
 
     if (formValues.kind === "radio") {
@@ -58,7 +59,9 @@ export default function Preview(props: { formId: number }) {
       );
     } else if (formValues.kind === "multi-select") {
       return (
-          <MultiSelectPreview/>
+          <MultiSelectPreview
+              options={formValues.options}
+          />
       );
     } else if (formValues.kind === "range") {
       return (

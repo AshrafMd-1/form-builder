@@ -20,10 +20,6 @@ interface MultiSelectInputsProps {
 export default function MultiSelectInputs(props: MultiSelectInputsProps) {
   const [optionInput, setOptionInput] = useState("");
 
-  if (props.option.length === 0) {
-    props.addOptionCB(props.id, "Sample Option");
-  }
-
   return (
       <div key={props.id} className="mb-4 p-2 shadow-md rounded-lg border-2 border-gray-300 m-2">
         <div

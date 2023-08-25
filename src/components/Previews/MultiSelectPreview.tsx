@@ -1,42 +1,53 @@
-export const MultiSelectPreview = () => {
-  return (
-      <div className="flex flex-col mt-5 border-2 border-gray-300 p-5 rounded-lg">
-        <div className="flex flex-row  items-center">
-          <input
-              className="mr-2 mt-1  leading-tight text-blue-500 focus:ring focus:ring-blue-200"
-              type="checkbox"
-              name="checkbox"
-              value="option1"
-              id="0"
-          />
-          <label className="text-center text-xl font-bold" htmlFor="0">
-            option1
-          </label>
-        </div>
-        <div className="flex flex-row  items-center">
-          <input
-              className="mr-2 mt-1  leading-tight text-blue-500 focus:ring focus:ring-blue-200"
-              type="checkbox"
-              name="checkbox"
-              value="option2"
-              id="1"
-          />
-          <label className="text-center text-xl font-bold" htmlFor="1">
-            option2
-          </label>
-        </div>
-        <div className="flex flex-row  items-center">
-          <input
-              className="mr-2 mt-1  leading-tight text-blue-500 focus:ring focus:ring-blue-200"
-              type="checkbox"
-              name="checkbox"
-              value="option3"
-              id="2"
-          />
-          <label className="text-center text-xl font-bold" htmlFor="2">
-            option3
-          </label>
-        </div>
-      </div>
-  )
+import React, {useState} from 'react';
+
+interface MultiSelectPreviewProps {
+  options: string[],
 }
+
+export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const toggleOption = (option: string) => {
+    if (selectedOptions.includes(option)) {
+      setSelectedOptions(selectedOptions.filter(item => item !== option));
+    } else {
+      setSelectedOptions([...selectedOptions, option]);
+    }
+  };
+
+  console.log('Selected options:', selectedOptions);
+
+  return (
+      <div className="relative">
+        <button
+            className="border px-4 py-2 rounded-lg"
+            onClick={toggleDropdown}
+        >
+          Open Dropdown
+        </button>
+        {isOpen && (
+            <div className="absolute mt-2 py-2 bg-white border border-gray-300 rounded-lg shadow-lg animate-slide-down">
+              {props.options.map((option) => (
+                  <label
+                      key={option}
+                      className="flex items-center px-4 py-2 cursor-pointer"
+                  >
+                    <input
+                        type="checkbox"
+                        className="form-checkbox mr-2"
+                        checked={selectedOptions.includes(option)}
+                        onChange={() => toggleOption(option)}
+                    />
+                    {option}
+                  </label>
+              ))}
+            </div>
+        )}
+      </div>
+  );
+};
+
