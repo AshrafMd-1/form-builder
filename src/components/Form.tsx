@@ -212,12 +212,13 @@ export default function Form(props: { formId: number }) {
           field.id === id && (field.kind === "radio" || field.kind === "multi-select")
               ? {
                 ...field,
-                options: [...field.options, option],
+                options: [...new Set([...field.options, option])],
               }
-              : field,
+              : field
       ),
     });
-  }
+  };
+
 
   const optionChangeHandler = (id: number, options: string, index: number) => {
     setState({
