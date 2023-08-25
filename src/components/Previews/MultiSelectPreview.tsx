@@ -2,35 +2,51 @@ import React, {useState} from 'react';
 
 interface MultiSelectPreviewProps {
   options: string[],
+  inputValue: string,
+  setInputValueForMultiSelect: (value: string[]) => void;
 }
 
 export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState(() => {
+    if (props.inputValue === "") return [];
+    return props.inputValue.split("|").map((option) => option.trim());
+  })
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+
   const toggleOption = (option: string) => {
     if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter(item => item !== option));
+      setSelectedOptions((selectedOptions) => {
+        const newSelectedOptions = selectedOptions.filter(
+            (selectedOption) => selectedOption !== option
+        );
+        props.setInputValueForMultiSelect(newSelectedOptions);
+        return newSelectedOptions;
+      });
     } else {
-      setSelectedOptions([...selectedOptions, option]);
+      setSelectedOptions((selectedOptions) => {
+        const newSelectedOptions = [...selectedOptions, option];
+        props.setInputValueForMultiSelect(newSelectedOptions);
+        return newSelectedOptions;
+      });
     }
   };
-
-  console.log('Selected options:', selectedOptions);
 
   return (
       <div className="relative">
         <button
-            className="border px-4 py-2 rounded-lg"
+            className="border mt-2 px-4 py-2 rounded-lg hover:bg-gray-100 focus:outline-none"
             onClick={toggleDropdown}
         >
           Open Dropdown
         </button>
         {isOpen && (
-            <div className="absolute mt-2 py-2 bg-white border border-gray-300 rounded-lg shadow-lg animate-slide-down">
+            <div
+                className="absolute w-full mt-1 py-2 bg-white border border-gray-300 rounded-lg shadow-lg animate-slide-down">
               {props.options.map((option) => (
                   <label
                       key={option}
@@ -38,7 +54,7 @@ export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
                   >
                     <input
                         type="checkbox"
-                        className="form-checkbox mr-2"
+                        className="form-checkbox mr-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         checked={selectedOptions.includes(option)}
                         onChange={() => toggleOption(option)}
                     />

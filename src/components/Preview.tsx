@@ -19,7 +19,7 @@ export default function Preview(props: { formId: number }) {
           formFields: [],
         };
   });
-  console.log(state)
+
   const [stateFormFieldIndex, setStateFormFieldIndex] = useState(0);
   const [form, setForm] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -48,32 +48,43 @@ export default function Preview(props: { formId: number }) {
     setInputValue(value);
   }
 
+  const setInputValueForMultiSelect = (value: string[]) => {
+    const newValue = value.join(" | ").trim();
+    setInputValue(newValue);
+  }
+
 
   const renderField = (formValues: formField) => {
 
     if (formValues.kind === "radio") {
       return (
           <RadioPreview
-              formValues={formValues}
+              options={formValues.options}
+              selectedInputValue={inputValue}
               setInputValueFunctionForRadioCB={setInputValueForRadio}/>
       );
     } else if (formValues.kind === "multi-select") {
       return (
           <MultiSelectPreview
               options={formValues.options}
+              inputValue={inputValue}
+              setInputValueForMultiSelect={setInputValueForMultiSelect}
           />
       );
     } else if (formValues.kind === "range") {
       return (
           <RangePreview
-              formValues={formValues}
+              kind={formValues.kind}
+              min={formValues.min}
+              max={formValues.max}
+              step={formValues.step}
               inputValue={inputValue}
               setInputValueUsingECB={setInputValueUsingE}/>
       );
     } else {
       return (
           <TextPreview
-              formValues={formValues}
+              fieldType={formValues.fieldType}
               inputValue={inputValue}
               setInputValueUsingECB={setInputValueUsingE}/>
       );
@@ -88,9 +99,6 @@ export default function Preview(props: { formId: number }) {
           <label className="text-center text-xl font-bold">
             {state.formFields[stateFormFieldIndex].label}
           </label>
-          <p>
-            {inputValue}
-          </p>
           {renderField(state.formFields[stateFormFieldIndex])}
         </div>
         <div className="flex flex-row justify-center items-center">

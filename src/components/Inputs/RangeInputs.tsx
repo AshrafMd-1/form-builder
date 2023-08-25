@@ -80,7 +80,6 @@ export const RangeInputs = (props: RangeInputsProps) => {
               <input
                   className="border-2  border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m focus:outline-none invalid:border-red-500"
                   type="number"
-                  name="max"
                   value={props.max}
                   onChange={(e) => {
                     props.rangeMaxChangeHandlerCB(props.id, parseInt(e.target.value));
