@@ -1,9 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import LabelledInput from "./LabelledInput";
-import { getLocalForms, saveFormData } from "./utils";
+import React, {useEffect, useRef, useState} from "react";
+import {getLocalForms, Options, saveFormData} from "../utils/utils";
 
-import { formField } from "./types";
-import { Link } from "raviger";
+import {formField} from "../types/formTypes";
+import {Link} from "raviger";
+import {Error} from "./Error";
+
+import LabelledInputs from "./Inputs/LabelledInputs";
+import MultiSelectInputs from "./Inputs/MultiSelectInputs";
+import {RangeInputs} from "./Inputs/RangeInputs";
 
 export const getFormBasedOnID = (id: number) => {
   const localForms = getLocalForms();
@@ -13,12 +17,19 @@ export const getFormBasedOnID = (id: number) => {
 export default function Form(props: { formId: number }) {
   const [state, setState] = useState(() => {
     const form = getFormBasedOnID(props.formId);
-    return form ? form : getLocalForms()[0];
+    return form
+        ? form
+        : {
+          id: 404,
+          title: "Wrong Form",
+          formFields: [],
+        };
   });
-  const [newField, setNewField] = useState({
-    type: "text",
-    value: "",
-  });
+  const [newField, setNewField] = useState(
+      {
+        fieldType: "",
+        value: "",
+      });
   const titleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -39,23 +50,76 @@ export default function Form(props: { formId: number }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [state]);
+  }, [state])
+
+  if (!state || state.id === 404) {
+    return <Error/>;
+  }
+
 
   const addField = () => {
-    setState({
-      ...state,
-      formFields: [
-        ...state.formFields,
-        {
-          id: Number(new Date()),
-          label: newField.value,
-          type: newField.type,
-          value: "",
-        },
-      ],
-    });
+    if (newField.fieldType === "multi-select") {
+      setState({
+        ...state,
+        formFields: [
+          ...state.formFields,
+          {
+            kind: "multi-select",
+            id: Number(new Date()),
+            label: newField.value,
+
+            options: [],
+            value: []
+          }
+        ],
+      });
+    } else if (newField.fieldType === "radio") {
+      setState({
+        ...state,
+        formFields: [
+          ...state.formFields,
+          {
+            kind: "radio",
+            id: Number(new Date()),
+            label: newField.value,
+            options: [],
+            value: "",
+          }
+        ],
+      });
+    } else if (newField.fieldType === "range") {
+      setState({
+        ...state,
+        formFields: [
+          ...state.formFields,
+          {
+            kind: "range",
+            id: Number(new Date()),
+            label: newField.value,
+            min: 0,
+            max: 100,
+            step: 1,
+            value: 0,
+          }
+        ],
+      });
+    } else {
+      setState({
+        ...state,
+        formFields: [
+          ...state.formFields,
+          {
+            kind: "text",
+            id: Number(new Date()),
+            label: newField.value,
+            fieldType: "text",
+            value: "",
+          }
+        ],
+      });
+    }
     setNewField({
-      type: "text",
+      fieldType: "text",
       value: "",
     });
   };
@@ -64,137 +128,312 @@ export default function Form(props: { formId: number }) {
     setState({
       ...state,
       formFields: state.formFields.filter(
-        (field: formField) => field.id !== id,
+          (field: formField) => field.id !== id,
       ),
     });
   };
 
   const changeTitle = (title: string) => {
-    setState({ ...state, title: title });
+    setState({...state, title: title});
   };
 
-  const fieldChangeHandler = (id: number, value: string) => {
-    setState({
-      ...state,
-      formFields: state.formFields.map((field: formField) =>
-        field.id === id ? { ...field, value } : field,
-      ),
-    });
-  };
 
   const columnChangeHandler = (id: number, label: string) => {
     setState({
       ...state,
       formFields: state.formFields.map((field: formField) =>
-        field.id === id ? { ...field, label } : field,
+          field.id === id ? {...field, label} : field,
       ),
     });
   };
 
   const typeChangeHandler = (id: number, type: string) => {
+    if (type === "radio") {
+      setState({
+        ...state,
+        formFields: state.formFields.map((field: formField) =>
+            field.id === id ? {
+              id: field.id,
+              label: field.label,
+              kind: "radio",
+              options: [],
+              value: "",
+            } : field,
+        ),
+      })
+    } else if (type === "multi-select") {
+      setState({
+        ...state,
+        formFields: state.formFields.map((field: formField) =>
+            field.id === id ? {
+              id: field.id,
+              label: field.label,
+              kind: "multi-select",
+              options: [],
+              value: [],
+            } : field,
+        ),
+      })
+    } else if (type === "range") {
+      setState({
+        ...state,
+        formFields: state.formFields.map((field: formField) =>
+            field.id === id ? {
+              id: field.id,
+              label: field.label,
+              kind: "range",
+              min: 0,
+              max: 100,
+              step: 1,
+              value: 0,
+            } : field,
+        ),
+      })
+    } else {
+      setState({
+        ...state,
+        formFields: state.formFields.map((field: formField) =>
+            field.id === id ? {
+              id: field.id,
+              label: field.label,
+              kind: "text",
+              fieldType: type,
+              value: "",
+            } : field,
+        ),
+      })
+    }
+  };
+
+  const addOption = (id: number, option: string) => {
     setState({
       ...state,
       formFields: state.formFields.map((field: formField) =>
-        field.id === id
-          ? {
-              ...field,
-              type,
-            }
-          : field,
+          field.id === id && (field.kind === "radio" || field.kind === "multi-select")
+              ? {
+                ...field,
+                options: [...field.options, option],
+              }
+              : field,
       ),
     });
-  };
+  }
+
+  const optionChangeHandler = (id: number, options: string, index: number) => {
+    setState({
+      ...state,
+      formFields: state.formFields.map((field: formField) => {
+            if (field.id === id && (field.kind === "radio" || field.kind === "multi-select")) {
+              field.options[index] = options;
+              return field;
+            } else {
+              return field;
+            }
+          }
+      ),
+    });
+  }
+
+  const removeOption = (id: number, index: number) => {
+    setState({
+      ...state,
+      formFields: state.formFields.map((field: formField) => {
+            if (field.id === id && (field.kind === "radio" || field.kind === "multi-select")) {
+              field.options.splice(index, 1);
+              return field;
+            } else {
+              return field;
+            }
+          }
+      ),
+    });
+  }
+
+  const rangeMinChangeHandler = (id: number, min: number) => {
+    setState({
+      ...state,
+      formFields: state.formFields.map((field: formField) =>
+          field.id === id && field.kind === "range"
+              ? {
+                ...field,
+                min: min,
+              }
+              : field,
+      ),
+    });
+  }
+
+  const rangeMaxChangeHandler = (id: number, max: number) => {
+    setState({
+      ...state,
+      formFields: state.formFields.map((field: formField) =>
+          field.id === id && field.kind === "range"
+              ? {
+                ...field,
+                max: max,
+              }
+              : field,
+      ),
+    });
+  }
+
+  const rangeStepChangeHandler = (id: number, step: number) => {
+    setState({
+      ...state,
+      formFields: state.formFields.map((field: formField) =>
+          field.id === id && field.kind === "range"
+              ? {
+                ...field,
+                step: step,
+              }
+              : field,
+      ),
+    });
+  }
+
+  const renderInputTypes = (field: formField, index: number) => {
+    if (field.kind === "radio" || field.kind === "multi-select") {
+      return (
+          <MultiSelectInputs
+              key={field.id}
+              id={field.id}
+              label={field.label}
+              option={field.options}
+              kind={field.kind}
+              count={index + 1}
+              removeFieldCB={removeField}
+              columnChangeHandlerCB={columnChangeHandler}
+              typeChangeHandlerCB={typeChangeHandler}
+              addOptionCB={addOption}
+              optionChangeHandlerCB={optionChangeHandler}
+              removeOptionCB={removeOption}
+          />
+      )
+    } else if (field.kind === "range") {
+      return (
+          <RangeInputs
+              key={field.id}
+              id={field.id}
+              label={field.label}
+              min={field.min}
+              max={field.max}
+              count={index + 1}
+              step={field.step}
+              kind={field.kind}
+              removeFieldCB={removeField}
+              columnChangeHandlerCB={columnChangeHandler}
+              typeChangeHandlerCB={typeChangeHandler}
+              rangeMinChangeHandlerCB={rangeMinChangeHandler}
+              rangeMaxChangeHandlerCB={rangeMaxChangeHandler}
+              rangeStepChangeHandlerCB={rangeStepChangeHandler}
+          />
+      )
+    } else {
+      return (
+          <LabelledInputs
+              key={field.id}
+              id={field.id}
+              label={field.label}
+              fieldType={field.fieldType}
+              count={index + 1}
+              removeFieldCB={removeField}
+              columnChangeHandlerCB={columnChangeHandler}
+              typeChangeHandlerCB={typeChangeHandler}
+          />
+      )
+    }
+  }
 
   return (
-    <>
-      <div className="p-4 border border-gray-300 rounded-lg shadow-md">
-        <div>
-          <input
-            type="text"
-            value={state.title}
-            className="border-2 mb-1 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
-            placeholder="New Form Title"
-            onChange={(e) => {
-              changeTitle(e.target.value);
-            }}
-            ref={titleRef}
-          />
+      <>
+        <div className="p-4 border border-gray-300 rounded-lg shadow-md">
+          <div>
+            <input
+                type="text"
+                value={state.title}
+                className="border-2 mb-1 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
+                placeholder="New Form Title"
+                onChange={(e) => {
+                  changeTitle(e.target.value);
+                }}
+                ref={titleRef}
+            />
+          </div>
+          {
+            state.formFields.map((field: formField, index: number) => (
+                renderInputTypes(field, index)
+            ))
+          }
+          <div className="flex gap-3 justify-between items-center mb-4">
+            <input
+                type="text"
+                value={newField.value}
+                className="border-2 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
+                placeholder="New Field Title"
+                onChange={(e) => {
+                  setNewField({
+                    ...newField,
+                    value: e.target.value,
+                  });
+                }}
+            />
+            <select
+                className="border-2 border-gray-300 rounded-md  mt-1  h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
+                onChange={(e) => {
+                  const chosenInput = e.target.value;
+                  if (chosenInput === "radio") {
+                    setNewField({
+                      ...newField,
+                      fieldType: "radio",
+                    });
+                  } else if (chosenInput === "multi-select") {
+                    setNewField({
+                      ...newField,
+                      fieldType: "multi-select"
+                    });
+                  } else if (chosenInput === "range") {
+                    setNewField({
+                          ...newField,
+                          fieldType: "range"
+                        }
+                    )
+                  } else {
+                    setNewField({
+                      ...newField,
+                      fieldType: "text",
+                    });
+                  }
+                }}
+                value={newField.fieldType}
+            >
+              <Options/>
+            </select>
+            <button
+                className="mt-auto mb-auto ml-2 bg-blue-500 hover:bg-blue-600 text-white pl-3 pr-3 font-bold  rounded-lg focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+                onClick={() => addField()}
+            >
+              Add Field
+            </button>
+          </div>
+          <div className="flex justify-end">
+            <button
+                onClick={(_) => {
+                  saveFormData(state);
+                }}
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-green active:bg-green-800"
+            >
+              Save
+            </button>
+            <Link
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+                href="/"
+            >
+              Close Form
+            </Link>
+          </div>
         </div>
-
-        {state.formFields.map((field: formField) => (
-          <LabelledInput
-            id={field.id}
-            key={field.id}
-            label={field.label}
-            type={field.type}
-            count={state.formFields.indexOf(field) + 1}
-            removeFieldCB={removeField}
-            fieldChangeHandlerCB={fieldChangeHandler}
-            columnChangeHandlerCB={columnChangeHandler}
-            typeChangeHandlerCB={typeChangeHandler}
-          />
-        ))}
-
-        <div className="flex gap-3 justify-between items-center mb-4">
-          <input
-            type="text"
-            value={newField.value}
-            className="border-2 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
-            placeholder="New Field Title"
-            onChange={(e) => {
-              setNewField({
-                ...newField,
-                value: e.target.value,
-              });
-            }}
-          />
-          <select
-            className="border-2 border-gray-300 rounded-md  mt-1  h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
-            onChange={(e) => {
-              setNewField({
-                ...newField,
-                type: e.target.value,
-              });
-            }}
-          >
-            <option value="text">Text</option>
-            <option value="email">Email</option>
-            <option value="password">Password</option>
-            <option value="number">Number</option>
-            <option value="date">Date</option>
-            <option value="time">Time</option>
-            <option value="url">Url</option>
-            <option value="tel">Tel</option>
-            <option value="color">Color</option>
-            <option value="datetime-local">Datetime-local</option>
-            <option value="month">Month</option>
-            <option value="week">Week</option>
-            <option value="file">File</option>
-          </select>
-          <button
-            className="mt-auto mb-auto ml-2 bg-blue-500 hover:bg-blue-600 text-white pl-3 pr-3 font-bold  rounded-lg focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-            onClick={addField}
-          >
-            Add Field
-          </button>
-        </div>
-        <div className="flex justify-end">
-          <button
-            onClick={(_) => {
-              saveFormData(state);
-            }}
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-green active:bg-green-800"
-          >
-            Save
-          </button>
-          <Link
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
-            href="/"
-          >
-            Close Form
-          </Link>
-        </div>
-      </div>
-    </>
-  );
+      </>
+  )
+      ;
 }
+
