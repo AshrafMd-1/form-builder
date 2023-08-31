@@ -9,8 +9,8 @@ export default function Preview(props: { formId: number }) {
     return form
       ? form
       : {
-          id: 404,
-          title: "Wrong Form",
+          id: props.formId,
+          title: "Sample Form",
           formFields: [],
         };
   });
@@ -27,11 +27,11 @@ export default function Preview(props: { formId: number }) {
     });
   }, [stateFormFieldIndex, inputValue]);
 
-  if (!state || state.id === 404 || state.formFields.length === 0) {
-    return <Error />;
-  }
-
   const title = state.title;
+
+  if (state.formFields.length === 0) {
+    return <Error errorMsg="No Questions" desc="This form has no questions" />;
+  }
 
   return (
     <div className="flex flex-col justify-center items-center">

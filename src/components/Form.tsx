@@ -4,7 +4,6 @@ import { getLocalForms, Options, saveFormData } from "./utils";
 
 import { formField } from "./types";
 import { Link } from "raviger";
-import { Error } from "./Error";
 
 export const getFormBasedOnID = (id: number) => {
   const localForms = getLocalForms();
@@ -17,8 +16,8 @@ export default function Form(props: { formId: number }) {
     return form
       ? form
       : {
-          id: 404,
-          title: "Wrong Form",
+          id: props.formId,
+          title: "Sample Form",
           formFields: [],
         };
   });
@@ -48,10 +47,6 @@ export default function Form(props: { formId: number }) {
       clearTimeout(timeout);
     };
   }, [state]);
-
-  if (!state || state.id === 404) {
-    return <Error />;
-  }
 
   const addField = () => {
     setState({

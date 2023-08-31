@@ -62,3 +62,8 @@ export const Options = () => {
     </>
   );
 };
+
+export const checkFormBasedOnID = (id: number) => {
+  const localForms = getLocalForms();
+  return localForms.find((form) => form.id === id);
+};

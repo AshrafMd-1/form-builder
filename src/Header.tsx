@@ -4,7 +4,7 @@ import { ActiveLink, navigate } from "raviger";
 
 export const Header = (props: { title: string }) => {
   return (
-    <div className="flex gap-2 items-center mt-2 mb-2 ">
+    <div className="flex gap-2 items-center mt-2 mb-2 border-b-2 border-gray-200">
       <img
         src={logo}
         className="animate-spin h-16 w-16 cursor-pointer"
