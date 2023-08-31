@@ -114,3 +114,8 @@ export const rangeObject = (id: number, label: string, min: number, max: number,
     value: "",
   }
 }
+
+export const checkFormBasedOnID = (id: number) => {
+  const localForms = getLocalForms();
+  return localForms.find((form) => form.id === id);
+};

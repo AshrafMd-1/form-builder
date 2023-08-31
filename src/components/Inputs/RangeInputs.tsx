@@ -70,7 +70,7 @@ export const RangeInputs = (props: RangeInputsProps) => {
                   name="min"
                   value={props.min}
                   onChange={(e) => {
-                    props.rangeMinChangeHandlerCB(props.id, parseInt(e.target.value));
+                    props.rangeMinChangeHandlerCB(props.id, parseInt(e.target.value) || 0);
                   }
                   }
               />
@@ -81,9 +81,8 @@ export const RangeInputs = (props: RangeInputsProps) => {
                   className="border-2  border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m focus:outline-none invalid:border-red-500"
                   type="number"
                   value={props.max}
-                  onChange={(e) => {
-                    props.rangeMaxChangeHandlerCB(props.id, parseInt(e.target.value));
-                  }
+                  onChange={(e) =>
+                      props.rangeMaxChangeHandlerCB(props.id, parseInt(e.target.value) || 0)
                   }
               />
             </div>
@@ -95,7 +94,7 @@ export const RangeInputs = (props: RangeInputsProps) => {
                   name="step"
                   value={props.step}
                   onChange={(e) => {
-                    props.rangeStepChangeHandlerCB(props.id, parseInt(e.target.value));
+                    props.rangeStepChangeHandlerCB(props.id, parseInt(e.target.value) || 0);
                   }}
               />
             </div>

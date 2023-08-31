@@ -3,7 +3,6 @@ import {getLocalForms, Options, saveFormData} from "../utils/utils";
 
 import {formField} from "../types/formTypes";
 import {Link} from "raviger";
-import {Error} from "./Error";
 
 import LabelledInputs from "./Inputs/LabelledInputs";
 import MultiSelectInputs from "./Inputs/MultiSelectInputs";
@@ -20,8 +19,8 @@ export default function Form(props: { formId: number }) {
     return form
         ? form
         : {
-          id: 404,
-          title: "Wrong Form",
+          id: props.formId,
+          title: "Sample Form",
           formFields: [],
         };
   });
@@ -52,10 +51,6 @@ export default function Form(props: { formId: number }) {
     };
   }, [state])
 
-  if (!state || state.id === 404) {
-    return <Error/>;
-  }
-
 
   const addField = () => {
     if (newField.fieldType === "multi-select") {
@@ -68,7 +63,9 @@ export default function Form(props: { formId: number }) {
             id: Number(new Date()),
             label: newField.value,
 
-            options: [],
+            options: [
+              "Sample Option 1",
+            ],
             value: []
           }
         ],
@@ -82,7 +79,7 @@ export default function Form(props: { formId: number }) {
             kind: "radio",
             id: Number(new Date()),
             label: newField.value,
-            options: [],
+            options: ["Sample Option 1"],
             value: "",
           }
         ],
@@ -156,7 +153,7 @@ export default function Form(props: { formId: number }) {
               id: field.id,
               label: field.label,
               kind: "radio",
-              options: [],
+              options: ["Sample Option 1"],
               value: "",
             } : field,
         ),
@@ -169,7 +166,7 @@ export default function Form(props: { formId: number }) {
               id: field.id,
               label: field.label,
               kind: "multi-select",
-              options: [],
+              options: ["Sample Option 1"],
               value: [],
             } : field,
         ),
@@ -206,6 +203,7 @@ export default function Form(props: { formId: number }) {
   };
 
   const addOption = (id: number, option: string) => {
+    if (option === "") return;
     setState({
       ...state,
       formFields: state.formFields.map((field: formField) =>
@@ -236,6 +234,10 @@ export default function Form(props: { formId: number }) {
   }
 
   const removeOption = (id: number, index: number) => {
+    const allOptions = state.formFields.find((field: formField) => field.id === id)
+    if (allOptions && (allOptions.kind === "radio" || allOptions.kind === "multi-select") && allOptions.options.length === 1) {
+      return;
+    }
     setState({
       ...state,
       formFields: state.formFields.map((field: formField) => {
