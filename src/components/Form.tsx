@@ -54,6 +54,15 @@ export default function Form(props: { formId: number }) {
     };
   }, [state]);
 
+  if (!checkFormBasedOnID(props.formId)) {
+    return (
+      <Error
+        errorMsg="Form Not Found"
+        desc="A form with this ID does not exist"
+      />
+    );
+  }
+
   const addField = () => {
     setState({
       ...state,
@@ -72,15 +81,6 @@ export default function Form(props: { formId: number }) {
       value: "",
     });
   };
-
-  if (!checkFormBasedOnID(props.formId)) {
-    return (
-      <Error
-        errorMsg="Form Not Found"
-        desc="A form with this ID does not exist"
-      />
-    );
-  }
 
   const removeField = (id: number) => {
     setState({
