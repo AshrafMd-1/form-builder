@@ -5,31 +5,12 @@ import { AppContainer } from "../AppContainer";
 import Home from "../components/Home";
 import Preview from "../components/preview";
 import { Error } from "../components/Error";
-import { checkFormBasedOnID } from "../components/utils";
 
 const routes = {
   "/": () => <Home />,
   "/about": () => <About />,
-  "/forms/:id": ({ id }: { id: string }) => {
-    if (checkFormBasedOnID(Number(id))) return <Form formId={Number(id)} />;
-    else
-      return (
-        <Error
-          errorMsg="Form Not Found"
-          desc="A form with this ID does not exist"
-        />
-      );
-  },
-  "/preview/:id": ({ id }: { id: string }) => {
-    if (checkFormBasedOnID(Number(id))) return <Preview formId={Number(id)} />;
-    else
-      return (
-        <Error
-          errorMsg="Preview Not Found"
-          desc="A preview with this ID does not exist"
-        />
-      );
-  },
+  "/forms/:id": ({ id }: { id: string }) => <Form formId={Number(id)} />,
+  "/preview/:id": ({ id }: { id: string }) => <Preview formId={Number(id)} />,
   "/*": () => (
     <Error
       errorMsg="Page Not Found"

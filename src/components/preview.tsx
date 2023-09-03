@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getLocalForms } from "./utils";
+import { checkFormBasedOnID, getLocalForms } from "./utils";
 import { navigate } from "raviger";
 import { Error } from "./Error";
 
@@ -29,7 +29,14 @@ export default function Preview(props: { formId: number }) {
 
   const title = state.title;
 
-  if (state.formFields.length === 0) {
+  if (!checkFormBasedOnID(props.formId)) {
+    return (
+      <Error
+        errorMsg="Preview Not Found"
+        desc="A preview with this ID does not exist"
+      />
+    );
+  } else if (state.formFields.length === 0) {
     return <Error errorMsg="No Questions" desc="This form has no questions" />;
   }
 

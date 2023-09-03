@@ -1,9 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import LabelledInput from "./LabelledInput";
-import { getLocalForms, Options, saveFormData } from "./utils";
+import {
+  checkFormBasedOnID,
+  getLocalForms,
+  Options,
+  saveFormData,
+} from "./utils";
 
 import { formField } from "./types";
 import { Link } from "raviger";
+import { Error } from "./Error";
 
 export const getFormBasedOnID = (id: number) => {
   const localForms = getLocalForms();
@@ -66,6 +72,15 @@ export default function Form(props: { formId: number }) {
       value: "",
     });
   };
+
+  if (!checkFormBasedOnID(props.formId)) {
+    return (
+      <Error
+        errorMsg="Form Not Found"
+        desc="A form with this ID does not exist"
+      />
+    );
+  }
 
   const removeField = (id: number) => {
     setState({
