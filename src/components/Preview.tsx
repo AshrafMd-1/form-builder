@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getLocalForms} from "../utils/utils";
+import {checkFormBasedOnID, getLocalForms} from "../utils/utils";
 import {navigate} from "raviger";
 import {formField} from "../types/formTypes";
 import {Error} from "./Error";
@@ -34,12 +34,18 @@ export default function Preview(props: { formId: number }) {
     };
   }, [stateFormFieldIndex, inputValue]);
 
-  if (state.formFields.length === 0) {
+  const title = state.title
+
+  if (!checkFormBasedOnID(props.formId)) {
+    return (
+        <Error
+            errorMsg="Preview Not Found"
+            desc="A preview with this ID does not exist"
+        />
+    );
+  } else if (state.formFields.length === 0) {
     return <Error errorMsg="No Questions" desc="This form has no questions"/>;
   }
-
-
-  const title = state.title
 
   const setInputValueUsingE = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);

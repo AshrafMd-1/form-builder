@@ -1,8 +1,9 @@
 import React, {useEffect, useRef, useState} from "react";
-import {getLocalForms, Options, saveFormData} from "../utils/utils";
+import {checkFormBasedOnID, getLocalForms, Options, saveFormData,} from "../utils/utils";
 
 import {formField} from "../types/formTypes";
 import {Link} from "raviger";
+import {Error} from "./Error";
 
 import LabelledInputs from "./Inputs/LabelledInputs";
 import MultiSelectInputs from "./Inputs/MultiSelectInputs";
@@ -29,6 +30,7 @@ export default function Form(props: { formId: number }) {
         fieldType: "",
         value: "",
       });
+
   const titleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -51,6 +53,14 @@ export default function Form(props: { formId: number }) {
     };
   }, [state])
 
+  if (!checkFormBasedOnID(props.formId)) {
+    return (
+        <Error
+            errorMsg="Form Not Found"
+            desc="A form with this ID does not exist"
+        />
+    );
+  }
 
   const addField = () => {
     if (newField.fieldType === "multi-select") {
@@ -218,26 +228,8 @@ export default function Form(props: { formId: number }) {
   };
 
 
-  const optionChangeHandler = (id: number, options: string, index: number) => {
-    setState({
-      ...state,
-      formFields: state.formFields.map((field: formField) => {
-            if (field.id === id && (field.kind === "radio" || field.kind === "multi-select")) {
-              field.options[index] = options;
-              return field;
-            } else {
-              return field;
-            }
-          }
-      ),
-    });
-  }
-
   const removeOption = (id: number, index: number) => {
     const allOptions = state.formFields.find((field: formField) => field.id === id)
-    if (allOptions && (allOptions.kind === "radio" || allOptions.kind === "multi-select") && allOptions.options.length === 1) {
-      return;
-    }
     setState({
       ...state,
       formFields: state.formFields.map((field: formField) => {
@@ -250,6 +242,9 @@ export default function Form(props: { formId: number }) {
           }
       ),
     });
+    if (allOptions && (allOptions.kind === "radio" || allOptions.kind === "multi-select") && allOptions.options.length === 0) {
+      addOption(id, "Sample Option 1")
+    }
   }
 
   const rangeMinChangeHandler = (id: number, min: number) => {
@@ -308,7 +303,6 @@ export default function Form(props: { formId: number }) {
               columnChangeHandlerCB={columnChangeHandler}
               typeChangeHandlerCB={typeChangeHandler}
               addOptionCB={addOption}
-              optionChangeHandlerCB={optionChangeHandler}
               removeOptionCB={removeOption}
           />
       )
@@ -436,7 +430,6 @@ export default function Form(props: { formId: number }) {
           </div>
         </div>
       </>
-  )
-      ;
+  );
 }
 
