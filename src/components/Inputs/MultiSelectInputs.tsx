@@ -71,12 +71,13 @@ export default function MultiSelectInputs(props: MultiSelectInputsProps) {
           >
             {props.option.map((optionValues, index) => {
               return (
-                  <div key={index} className="grid grid-cols-5 gap-2">
+                  <div key={index} className="grid grid-cols-5 gap-2 my-1">
                     <label className="mr-2 col-span-1 text-center font-bold">Option {index + 1}</label>
                     <label
                         className="mr-2 col-span-3 text-center my-auto break-all ">{optionValues}</label>
                     <button
-                        className=" col-span-1 bg-red-500 mb-auto mt-auto mr-auto text-white rounded-lg hover:bg-red-600 p-1"
+                        className=" col-span-1 bg-red-500 mb-auto mt-auto mr-auto text-white rounded-lg hover:bg-red-600 p-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={props.option.length === 1 && optionValues === "Sample Option 1"}
                         onClick={(_) => {
                           props.removeOptionCB(props.id, index);
                         }}

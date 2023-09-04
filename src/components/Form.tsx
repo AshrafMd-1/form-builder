@@ -9,27 +9,28 @@ import LabelledInputs from "./Inputs/LabelledInputs";
 import MultiSelectInputs from "./Inputs/MultiSelectInputs";
 import {RangeInputs} from "./Inputs/RangeInputs";
 
-export const getFormBasedOnID = (id: number) => {
+const getFormBasedOnID = (id: number) => {
   const localForms = getLocalForms();
   return localForms.find((form) => form.id === id);
 };
 
+const initialForm = (formId: number) => {
+  const form = getFormBasedOnID(formId);
+  return form
+      ? form
+      : {
+        id: formId,
+        title: "Sample Form",
+        formFields: [],
+      };
+};
+
 export default function Form(props: { formId: number }) {
-  const [state, setState] = useState(() => {
-    const form = getFormBasedOnID(props.formId);
-    return form
-        ? form
-        : {
-          id: props.formId,
-          title: "Sample Form",
-          formFields: [],
-        };
+  const [state, setState] = useState(() => initialForm(props.formId));
+  const [newField, setNewField] = useState({
+    fieldType: "",
+    value: "",
   });
-  const [newField, setNewField] = useState(
-      {
-        fieldType: "",
-        value: "",
-      });
 
   const titleRef = useRef<HTMLInputElement>(null);
 
@@ -51,7 +52,7 @@ export default function Form(props: { formId: number }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [state])
+  }, [state]);
 
   if (!checkFormBasedOnID(props.formId)) {
     return (
@@ -73,11 +74,9 @@ export default function Form(props: { formId: number }) {
             id: Number(new Date()),
             label: newField.value,
 
-            options: [
-              "Sample Option 1",
-            ],
-            value: []
-          }
+            options: ["Sample Option 1"],
+            value: [],
+          },
         ],
       });
     } else if (newField.fieldType === "radio") {
@@ -91,7 +90,7 @@ export default function Form(props: { formId: number }) {
             label: newField.value,
             options: ["Sample Option 1"],
             value: "",
-          }
+          },
         ],
       });
     } else if (newField.fieldType === "range") {
@@ -107,7 +106,7 @@ export default function Form(props: { formId: number }) {
             max: 100,
             step: 1,
             value: 0,
-          }
+          },
         ],
       });
     } else {
@@ -121,7 +120,7 @@ export default function Form(props: { formId: number }) {
             label: newField.value,
             fieldType: "text",
             value: "",
-          }
+          },
         ],
       });
     }
@@ -144,7 +143,6 @@ export default function Form(props: { formId: number }) {
     setState({...state, title: title});
   };
 
-
   const columnChangeHandler = (id: number, label: string) => {
     setState({
       ...state,
@@ -159,56 +157,64 @@ export default function Form(props: { formId: number }) {
       setState({
         ...state,
         formFields: state.formFields.map((field: formField) =>
-            field.id === id ? {
-              id: field.id,
-              label: field.label,
-              kind: "radio",
-              options: ["Sample Option 1"],
-              value: "",
-            } : field,
+            field.id === id
+                ? {
+                  id: field.id,
+                  label: field.label,
+                  kind: "radio",
+                  options: ["Sample Option 1"],
+                  value: "",
+                }
+                : field,
         ),
-      })
+      });
     } else if (type === "multi-select") {
       setState({
         ...state,
         formFields: state.formFields.map((field: formField) =>
-            field.id === id ? {
-              id: field.id,
-              label: field.label,
-              kind: "multi-select",
-              options: ["Sample Option 1"],
-              value: [],
-            } : field,
+            field.id === id
+                ? {
+                  id: field.id,
+                  label: field.label,
+                  kind: "multi-select",
+                  options: ["Sample Option 1"],
+                  value: [],
+                }
+                : field,
         ),
-      })
+      });
     } else if (type === "range") {
       setState({
         ...state,
         formFields: state.formFields.map((field: formField) =>
-            field.id === id ? {
-              id: field.id,
-              label: field.label,
-              kind: "range",
-              min: 0,
-              max: 100,
-              step: 1,
-              value: 0,
-            } : field,
+            field.id === id
+                ? {
+                  id: field.id,
+                  label: field.label,
+                  kind: "range",
+                  min: 0,
+                  max: 100,
+                  step: 1,
+                  value: 0,
+                }
+                : field,
         ),
-      })
+      });
     } else {
       setState({
         ...state,
         formFields: state.formFields.map((field: formField) =>
-            field.id === id ? {
-              id: field.id,
-              label: field.label,
-              kind: "text",
-              fieldType: type,
-              value: "",
-            } : field,
+            field.id === id
+                ? {
+                  id: field.id,
+                  label: field.label,
+                  kind: "text",
+                  fieldType: type,
+                  value: "",
+                }
+                : field,
         ),
-      })
+      });
     }
   };
 
@@ -217,35 +223,43 @@ export default function Form(props: { formId: number }) {
     setState({
       ...state,
       formFields: state.formFields.map((field: formField) =>
-          field.id === id && (field.kind === "radio" || field.kind === "multi-select")
+          field.id === id &&
+          (field.kind === "radio" || field.kind === "multi-select")
               ? {
                 ...field,
                 options: [...new Set([...field.options, option])],
               }
-              : field
+              : field,
       ),
     });
   };
 
-
   const removeOption = (id: number, index: number) => {
-    const allOptions = state.formFields.find((field: formField) => field.id === id)
+    const allOptions = state.formFields.find(
+        (field: formField) => field.id === id,
+    );
     setState({
       ...state,
       formFields: state.formFields.map((field: formField) => {
-            if (field.id === id && (field.kind === "radio" || field.kind === "multi-select")) {
-              field.options.splice(index, 1);
-              return field;
-            } else {
-              return field;
-            }
-          }
-      ),
+        if (
+            field.id === id &&
+            (field.kind === "radio" || field.kind === "multi-select")
+        ) {
+          field.options.splice(index, 1);
+          return field;
+        } else {
+          return field;
+        }
+      }),
     });
-    if (allOptions && (allOptions.kind === "radio" || allOptions.kind === "multi-select") && allOptions.options.length === 0) {
-      addOption(id, "Sample Option 1")
+    if (
+        allOptions &&
+        (allOptions.kind === "radio" || allOptions.kind === "multi-select") &&
+        allOptions.options.length === 0
+    ) {
+      addOption(id, "Sample Option 1");
     }
-  }
+  };
 
   const rangeMinChangeHandler = (id: number, min: number) => {
     setState({
@@ -259,7 +273,7 @@ export default function Form(props: { formId: number }) {
               : field,
       ),
     });
-  }
+  };
 
   const rangeMaxChangeHandler = (id: number, max: number) => {
     setState({
@@ -273,7 +287,7 @@ export default function Form(props: { formId: number }) {
               : field,
       ),
     });
-  }
+  };
 
   const rangeStepChangeHandler = (id: number, step: number) => {
     setState({
@@ -287,7 +301,7 @@ export default function Form(props: { formId: number }) {
               : field,
       ),
     });
-  }
+  };
 
   const renderInputTypes = (field: formField, index: number) => {
     if (field.kind === "radio" || field.kind === "multi-select") {
@@ -305,7 +319,7 @@ export default function Form(props: { formId: number }) {
               addOptionCB={addOption}
               removeOptionCB={removeOption}
           />
-      )
+      );
     } else if (field.kind === "range") {
       return (
           <RangeInputs
@@ -324,7 +338,7 @@ export default function Form(props: { formId: number }) {
               rangeMaxChangeHandlerCB={rangeMaxChangeHandler}
               rangeStepChangeHandlerCB={rangeStepChangeHandler}
           />
-      )
+      );
     } else {
       return (
           <LabelledInputs
@@ -337,9 +351,9 @@ export default function Form(props: { formId: number }) {
               columnChangeHandlerCB={columnChangeHandler}
               typeChangeHandlerCB={typeChangeHandler}
           />
-      )
+      );
     }
-  }
+  };
 
   return (
       <>
@@ -356,11 +370,9 @@ export default function Form(props: { formId: number }) {
                 ref={titleRef}
             />
           </div>
-          {
-            state.formFields.map((field: formField, index: number) => (
-                renderInputTypes(field, index)
-            ))
-          }
+          {state.formFields.map((field: formField, index: number) =>
+              renderInputTypes(field, index),
+          )}
           <div className="flex gap-3 justify-between items-center mb-4">
             <input
                 type="text"
@@ -386,14 +398,13 @@ export default function Form(props: { formId: number }) {
                   } else if (chosenInput === "multi-select") {
                     setNewField({
                       ...newField,
-                      fieldType: "multi-select"
+                      fieldType: "multi-select",
                     });
                   } else if (chosenInput === "range") {
                     setNewField({
-                          ...newField,
-                          fieldType: "range"
-                        }
-                    )
+                      ...newField,
+                      fieldType: "range",
+                    });
                   } else {
                     setNewField({
                       ...newField,
@@ -432,4 +443,3 @@ export default function Form(props: { formId: number }) {
       </>
   );
 }
-
