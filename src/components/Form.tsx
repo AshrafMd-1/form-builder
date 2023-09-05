@@ -119,7 +119,7 @@ const reducer = (state: formData, action: FormAction) => {
 
 export default function Form(props: { formId: number }) {
   const [state, dispatch] = useReducer(reducer, getFormBasedOnID(props.formId));
-  const [newField, setNewField] = useState({ fieldType: "", value: "" });
+  const [newField, setNewField] = useState({ fieldType: "text", value: "" });
   const titleRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
