@@ -1,4 +1,4 @@
-import {formData, formField} from "../types/formTypes";
+import { formData, formField } from "../types/formTypes";
 import React from "react";
 
 export const initialFormFields: formField[] = [
@@ -58,30 +58,30 @@ export const saveLocalForms = (localForm: formData[]) => {
 export const saveFormData = (currentState: formData) => {
   const localForms = getLocalForms();
   const updateLocalForms = localForms.map((form) =>
-      form.id === currentState.id ? currentState : form,
+    form.id === currentState.id ? currentState : form,
   );
   saveLocalForms(updateLocalForms);
 };
 
 export const Options = () => {
   return (
-      <>
-        <option value="text">Text</option>
-        <option value="radio">Radio</option>
-        <option value="multi-select">Multi-Select</option>
-        <option value="range">Range</option>
-        <option value="email">Email</option>
-        <option value="number">Number</option>
-        <option value="password">Password</option>
-        <option value="date">Date</option>
-        <option value="time">Time</option>
-        <option value="url">Url</option>
-        <option value="datetime-local">Datetime-local</option>
-        <option value="month">Month</option>
-        <option value="week">Week</option>
-      </>
-  )
-}
+    <>
+      <option value="text">Text</option>
+      <option value="radio">Radio</option>
+      <option value="multi-select">Multi-Select</option>
+      <option value="range">Range</option>
+      <option value="email">Email</option>
+      <option value="number">Number</option>
+      <option value="password">Password</option>
+      <option value="date">Date</option>
+      <option value="time">Time</option>
+      <option value="url">Url</option>
+      <option value="datetime-local">Datetime-local</option>
+      <option value="month">Month</option>
+      <option value="week">Week</option>
+    </>
+  );
+};
 
 export const radioObject = (id: number, label: string, options: string[]) => {
   return {
@@ -90,20 +90,30 @@ export const radioObject = (id: number, label: string, options: string[]) => {
     label: label,
     options: options,
     value: "",
-  }
-}
+  };
+};
 
-export const multiSelectObject = (id: number, label: string, options: string[]) => {
+export const multiSelectObject = (
+  id: number,
+  label: string,
+  options: string[],
+) => {
   return {
     kind: "multi-select",
     id: id,
     label: label,
     options: options,
     value: [],
-  }
-}
+  };
+};
 
-export const rangeObject = (id: number, label: string, min: number, max: number, step: number) => {
+export const rangeObject = (
+  id: number,
+  label: string,
+  min: number,
+  max: number,
+  step: number,
+) => {
   return {
     kind: "range",
     id: id,
@@ -112,8 +122,8 @@ export const rangeObject = (id: number, label: string, min: number, max: number,
     max: max,
     step: step,
     value: "",
-  }
-}
+  };
+};
 
 export const checkFormBasedOnID = (id: number) => {
   const localForms = getLocalForms();

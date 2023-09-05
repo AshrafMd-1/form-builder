@@ -10,14 +10,13 @@ export interface formData {
   formFields: formField[];
 }
 
-
 type TextField = {
   kind: "text";
   id: number;
   label: string;
   fieldType: string;
   value: string;
-}
+};
 
 type MultiSelectField = {
   kind: "multi-select";
@@ -25,7 +24,7 @@ type MultiSelectField = {
   label: string;
   options: string[];
   value: string[];
-}
+};
 
 type RadioField = {
   kind: "radio";
@@ -33,7 +32,7 @@ type RadioField = {
   label: string;
   options: string[];
   value: string;
-}
+};
 
 type RangeField = {
   kind: "range";
@@ -43,6 +42,6 @@ type RangeField = {
   max: number;
   step: number;
   value: number;
-}
+};
 
 export type formField = TextField | MultiSelectField | RadioField | RangeField;

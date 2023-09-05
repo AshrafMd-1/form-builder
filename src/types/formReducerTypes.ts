@@ -6,8 +6,8 @@ type ChangeFormTitle = {
 type AddFieldToForm = {
   type: "add_field_to_form";
   fieldType: string;
-  value: string;
-  callback: ()=>void;
+  label: string;
+  callback: () => void;
 };
 
 type RemoveFieldFromForm = {
