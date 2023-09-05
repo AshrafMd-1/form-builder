@@ -1,3 +1,5 @@
+import { formField } from "./formTypes";
+
 type ChangeFormTitle = {
   type: "change_form_title";
   title: string;
@@ -5,8 +7,7 @@ type ChangeFormTitle = {
 
 type AddFieldToForm = {
   type: "add_field_to_form";
-  fieldType: string;
-  label: string;
+  formField: formField;
   callback: () => void;
 };
 
@@ -19,12 +20,6 @@ type EditFormFieldLabel = {
   type: "edit_form_field_label";
   id: number;
   label: string;
-};
-
-type EditFormFieldType = {
-  type: "edit_form_field_type";
-  id: number;
-  fieldType: string;
 };
 
 type AddOptionToFormField = {
@@ -62,7 +57,6 @@ export type FormAction =
   | AddFieldToForm
   | RemoveFieldFromForm
   | EditFormFieldLabel
-  | EditFormFieldType
   | AddOptionToFormField
   | RemoveOptionFromFormField
   | EditRangeMinOfFormField

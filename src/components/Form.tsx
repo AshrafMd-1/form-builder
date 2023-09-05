@@ -27,45 +27,6 @@ const getFormBasedOnID = (id: number) => {
       };
 };
 
-// const newFormGenerator = (type: string, label: string) => {
-//   switch (type) {
-//     case "radio":
-//       return {
-//         kind: "radio",
-//         id: Number(new Date()),
-//         label: label,
-//         options: ["Sample Option 1"],
-//         value: "",
-//       };
-//     case "multi-select":
-//       return {
-//         kind: "multi-select",
-//         id: Number(new Date()),
-//         label: label,
-//         options: ["Sample Option 1"],
-//         value: [],
-//       };
-//     case "range":
-//       return {
-//         kind: "range",
-//         id: Number(new Date()),
-//         label: label,
-//         min: 0,
-//         max: 100,
-//         step: 1,
-//         value: 0,
-//       };
-//     default:
-//       return {
-//         kind: "text",
-//         id: Number(new Date()),
-//         label: label,
-//         fieldType: type,
-//         value: "",
-//       };
-//   }
-// };
-
 const reducer = (state: formData, action: FormAction) => {
   switch (action.type) {
     case "change_form_title": {
@@ -73,7 +34,12 @@ const reducer = (state: formData, action: FormAction) => {
     }
     case "add_field_to_form": {
       action.callback();
-      return state;
+      return {
+        ...state,
+        formFields: action.formField
+          ? [...state.formFields, action.formField]
+          : [...state.formFields],
+      };
     }
     case "remove_field_from_form": {
       const updatedFormFields = state.formFields.filter(
@@ -86,9 +52,6 @@ const reducer = (state: formData, action: FormAction) => {
         field.id === action.id ? { ...field, label: action.label } : field,
       );
       return { ...state, formFields: updatedFormFields };
-    }
-    case "edit_form_field_type": {
-      return state;
     }
     case "add_option_to_form_field": {
       if (!action.option) return state;
@@ -208,13 +171,6 @@ export default function Form(props: { formId: number }) {
               label: label,
             })
           }
-          typeChangeHandlerCB={(id: number, type: string) =>
-            dispatch({
-              type: "edit_form_field_type",
-              id: id,
-              fieldType: type,
-            })
-          }
           addOptionCB={(id: number, option: string) =>
             dispatch({
               type: "add_option_to_form_field",
@@ -250,13 +206,6 @@ export default function Form(props: { formId: number }) {
               type: "edit_form_field_label",
               id: id,
               label: label,
-            })
-          }
-          typeChangeHandlerCB={(id: number, type: string) =>
-            dispatch({
-              type: "edit_form_field_type",
-              id: id,
-              fieldType: type,
             })
           }
           rangeMinChangeHandlerCB={(id: number, min: number) =>
@@ -298,13 +247,6 @@ export default function Form(props: { formId: number }) {
               type: "edit_form_field_label",
               id: id,
               label: label,
-            })
-          }
-          typeChangeHandlerCB={(id: number, type: string) =>
-            dispatch({
-              type: "edit_form_field_type",
-              id: id,
-              fieldType: type,
             })
           }
         />
@@ -368,7 +310,7 @@ export default function Form(props: { formId: number }) {
               } else {
                 setNewField({
                   ...newField,
-                  fieldType: "text",
+                  fieldType: chosenInput,
                 });
               }
             }}
@@ -379,17 +321,65 @@ export default function Form(props: { formId: number }) {
           <button
             className="mt-auto mb-auto ml-2 bg-blue-500 hover:bg-blue-600 text-white pl-3 pr-3 font-bold  rounded-lg focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
             onClick={() => {
-              dispatch({
-                type: "add_field_to_form",
-                label: newField.value,
-                fieldType: newField.fieldType,
-                callback: () => {
-                  setNewField({
-                    ...newField,
+              if (newField.fieldType === "radio") {
+                dispatch({
+                  type: "add_field_to_form",
+                  formField: {
+                    kind: "radio",
+                    id: Number(new Date()),
+                    label: newField.value,
+                    options: ["Sample Option 1"],
                     value: "",
-                  });
-                },
-              });
+                  },
+                  callback: () => {
+                    setNewField({ fieldType: "", value: "" });
+                  },
+                });
+              } else if (newField.fieldType === "multi-select") {
+                dispatch({
+                  type: "add_field_to_form",
+                  formField: {
+                    kind: "multi-select",
+                    id: Number(new Date()),
+                    label: newField.value,
+                    options: ["Sample Option 1"],
+                    value: [],
+                  },
+                  callback: () => {
+                    setNewField({ fieldType: "", value: "" });
+                  },
+                });
+              } else if (newField.fieldType === "range") {
+                dispatch({
+                  type: "add_field_to_form",
+                  formField: {
+                    kind: "range",
+                    id: Number(new Date()),
+                    label: newField.value,
+                    min: 0,
+                    max: 100,
+                    step: 1,
+                    value: 0,
+                  },
+                  callback: () => {
+                    setNewField({ fieldType: "", value: "" });
+                  },
+                });
+              } else {
+                dispatch({
+                  type: "add_field_to_form",
+                  formField: {
+                    kind: "text",
+                    id: Number(new Date()),
+                    label: newField.value,
+                    fieldType: newField.fieldType,
+                    value: "",
+                  },
+                  callback: () => {
+                    setNewField({ fieldType: "", value: "" });
+                  },
+                });
+              }
             }}
           >
             Add Field

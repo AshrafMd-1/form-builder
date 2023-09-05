@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Options } from "../../utils/utils";
 
 interface MultiSelectInputsProps {
   id: number;
@@ -9,7 +8,6 @@ interface MultiSelectInputsProps {
   count: number;
   removeFieldCB: (id: number) => void;
   columnChangeHandlerCB: (id: number, value: string) => void;
-  typeChangeHandlerCB: (id: number, value: string) => void;
   addOptionCB: (id: number, value: string) => void;
   removeOptionCB: (id: number, index: number) => void;
 }
@@ -40,17 +38,8 @@ export default function MultiSelectInputs(props: MultiSelectInputsProps) {
           />
         </div>
         <div className="flex flex-col">
-          <label className="mr-2 font-bold">Type</label>
-          <select
-            className="border-2 mt-2 text-m border-gray-300 bg-white h-10 px-1  rounded-lg  focus:outline-none"
-            name="type"
-            value={props.kind}
-            onChange={(e) =>
-              props.typeChangeHandlerCB(props.id, e.target.value)
-            }
-          >
-            <Options />
-          </select>
+          <label className="m-auto font-bold">Type</label>
+          <label className="text-xl mb-2 mx-auto">{props.kind}</label>
         </div>
         <button
           className="ml-2 mt-auto bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg px-3 py-2 focus:outline-none focus:shadow-outline-red active:bg-red-500"
