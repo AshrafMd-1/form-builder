@@ -8,10 +8,6 @@ interface MultiSelectPreviewProps {
 
 export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState(() => {
-    if (props.inputValue === "") return [];
-    return props.inputValue.split("|").map((option) => option.trim());
-  })
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -19,20 +15,10 @@ export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
 
 
   const toggleOption = (option: string) => {
-    if (selectedOptions.includes(option)) {
-      setSelectedOptions((selectedOptions) => {
-        const newSelectedOptions = selectedOptions.filter(
-            (selectedOption) => selectedOption !== option
-        );
-        props.setInputValueForMultiSelect(newSelectedOptions);
-        return newSelectedOptions;
-      });
+    if (props.inputValue.includes(option)) {
+      props.setInputValueForMultiSelect(props.inputValue.split("|").filter((value) => value !== option));
     } else {
-      setSelectedOptions((selectedOptions) => {
-        const newSelectedOptions = [...selectedOptions, option];
-        props.setInputValueForMultiSelect(newSelectedOptions);
-        return newSelectedOptions;
-      });
+      props.setInputValueForMultiSelect([...props.inputValue.split("|"), option]);
     }
   };
 
@@ -55,7 +41,7 @@ export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
                     <input
                         type="checkbox"
                         className="form-checkbox mr-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        checked={selectedOptions.includes(option)}
+                        checked={props.inputValue.includes(option)}
                         onChange={() => toggleOption(option)}
                     />
                     {option}
@@ -65,5 +51,4 @@ export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
         )}
       </div>
   );
-};
-
+}

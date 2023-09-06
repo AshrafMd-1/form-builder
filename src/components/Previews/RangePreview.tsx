@@ -10,8 +10,6 @@ interface RangePreviewProps {
 }
 
 export const RangePreview = (props: RangePreviewProps) => {
-  console.log("RangePreview");
-  console.log(props.inputValue);
   return (
       <>
         <input

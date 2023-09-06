@@ -220,6 +220,12 @@ export default function Form(props: { formId: number }) {
 
   const addOption = (id: number, option: string) => {
     if (option === "") return;
+    const allOptions = state.formFields.find(
+        (field: formField) => field.id === id,
+    );
+    if (allOptions && (allOptions.kind === "radio" || allOptions.kind === "multi-select") && allOptions.options.length > 0 && allOptions.options.includes("Sample Option 1")) {
+      removeOption(id, allOptions.options.indexOf("Sample Option 1"));
+    }
     setState({
       ...state,
       formFields: state.formFields.map((field: formField) =>
@@ -227,7 +233,8 @@ export default function Form(props: { formId: number }) {
           (field.kind === "radio" || field.kind === "multi-select")
               ? {
                 ...field,
-                options: [...new Set([...field.options, option])],
+                options: [...new Set([...field.options, option])]
+
               }
               : field,
       ),

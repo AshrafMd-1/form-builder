@@ -56,7 +56,7 @@ export default function Preview(props: { formId: number }) {
   }
 
   const setInputValueForMultiSelect = (value: string[]) => {
-    const newValue = value.join(" | ").trim();
+    const newValue = value.join("|").trim();
     setInputValue(newValue);
   }
 
@@ -102,6 +102,22 @@ export default function Preview(props: { formId: number }) {
   return (
       <div className="flex flex-col justify-center items-center">
         <div className="text-center text-2xl font-bold">{title}</div>
+        <div className="text-center text-xl flex">
+          <span className="text-gray-500 font-bold">
+              Question
+          </span>
+          &nbsp;:&nbsp;
+          <p className="font-bold">
+            {stateFormFieldIndex + 1}&nbsp;
+            <span className="font-normal">
+              of
+            </span>
+            &nbsp;{state.formFields.length}
+          </p>
+        </div>
+        <div className="text-center text-xl font-bold">
+          <p>{inputValue}</p>
+        </div>
         <div className="flex flex-col justify-center items-center mt-5 border-2 border-gray-300 p-5 rounded-lg">
           <label className="text-center text-xl font-bold">
             {state.formFields[stateFormFieldIndex].label}
