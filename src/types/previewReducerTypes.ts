@@ -1,12 +1,7 @@
 import React from "react";
 
-type EditInputValueUsingE = {
-  type: "edit_input_value_using_e";
-  e: React.ChangeEvent<HTMLInputElement>;
-};
-
-type EditInputValueForRadio = {
-  type: "edit_input_value_for_radio";
+type EditInputValueUsingString = {
+  type: "edit_input_value_using_string";
   value: string;
 };
 
@@ -23,19 +18,9 @@ type SetEmptyInputValue = {
   type: "set_empty_input_value";
 };
 
-type IncreaseIndexValue = {
-  type: "increase_index_value";
-};
-
-type DecreaseIndexValue = {
-  type: "decrease_index_value";
-};
-
 export type InputValueActions =
-  | EditInputValueUsingE
-  | EditInputValueForRadio
+  | EditInputValueUsingString
   | EditInputValueForMultiSelect
   | SetInputValueBasedOnIndexValue
   | SetEmptyInputValue;
 
-export type IndexAction = IncreaseIndexValue | DecreaseIndexValue;

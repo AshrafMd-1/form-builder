@@ -58,7 +58,17 @@ const reducer = (state: formData, action: FormAction) => {
           field.id === action.id
             ? {
                 ...field,
-                options: [...new Set([...field.options, action.option])],
+                options:
+                  field.options.length > 0 &&
+                  field.options.includes("Sample Option 1")
+                    ? [
+                        ...field.options.slice(
+                          0,
+                          field.options.indexOf("Sample Option 1"),
+                        ),
+                        action.option,
+                      ]
+                    : [...new Set([...field.options, action.option])],
               }
             : field,
         ),

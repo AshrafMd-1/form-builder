@@ -6,12 +6,10 @@ interface RangePreviewProps {
   max: number;
   step: number;
   inputValue: string;
-  setInputValueUsingECB: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  setInputValueUsingStringCB: (value: string) => void;
 }
 
 export const RangePreview = (props: RangePreviewProps) => {
-  console.log("RangePreview");
-  console.log(props.inputValue);
   return (
     <>
       <input
@@ -21,7 +19,7 @@ export const RangePreview = (props: RangePreviewProps) => {
         max={props.max}
         step={props.step}
         value={props.inputValue === "" ? props.min : props.inputValue}
-        onChange={(e) => props.setInputValueUsingECB(e)}
+        onChange={(e) => props.setInputValueUsingStringCB(e.target.value)}
       />
       <label className="mr-2 font-bold">
         Value : {props.inputValue === "" ? props.min : props.inputValue}

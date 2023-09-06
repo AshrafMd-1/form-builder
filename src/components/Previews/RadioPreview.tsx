@@ -3,7 +3,7 @@ import React from "react";
 interface RadioPreviewProps {
   options: string[];
   selectedInputValue: string;
-  setInputValueFunctionForRadioCB: (value: string) => void;
+  setInputValueUsingStringCB: (value: string) => void;
 }
 
 export const RadioPreview = (props: RadioPreviewProps) => {
@@ -18,9 +18,7 @@ export const RadioPreview = (props: RadioPreviewProps) => {
             value={option}
             checked={option === props.selectedInputValue}
             id={index.toString()}
-            onChange={(e) =>
-              props.setInputValueFunctionForRadioCB(e.target.value)
-            }
+            onChange={(e) => props.setInputValueUsingStringCB(e.target.value)}
           />
           <label
             className="text-center text-xl font-bold"

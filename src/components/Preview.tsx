@@ -7,7 +7,7 @@ import { TextPreview } from "./Previews/TextPreview";
 import { RadioPreview } from "./Previews/RadioPreview";
 import { MultiSelectPreview } from "./Previews/MultiSelectPreview";
 import { RangePreview } from "./Previews/RangePreview";
-import { IndexAction, InputValueActions } from "../types/previewReducerTypes";
+import { InputValueActions } from "../types/previewReducerTypes";
 
 const initialState = (id: number) => {
   const form = getLocalForms().find((form) => form.id === id);
@@ -22,14 +22,11 @@ const initialState = (id: number) => {
 
 const inputReducer = (state: string, action: InputValueActions) => {
   switch (action.type) {
-    case "edit_input_value_using_e": {
-      return action.e.target.value;
-    }
-    case "edit_input_value_for_radio": {
+    case "edit_input_value_using_string": {
       return action.value;
     }
     case "edit_input_value_for_multi_select": {
-      return action.value.join(" | ").trim();
+      return action.value.filter((v: string) => v !== "").join(" | ");
     }
     case "set_input_value_based_on_index": {
       return action.value;
@@ -42,27 +39,11 @@ const inputReducer = (state: string, action: InputValueActions) => {
   }
 };
 
-const stateFormIndexReducer = (state: number, action: IndexAction) => {
-  switch (action.type) {
-    case "increase_index_value": {
-      return state + 1;
-    }
-    case "decrease_index_value": {
-      return state - 1;
-    }
-    default:
-      return state;
-  }
-};
-
 export default function Preview(props: { formId: number }) {
   const [state] = useState(() => initialState(props.formId));
   const [form, setForm] = useState<string[]>([]);
+  const [stateFormIndex, setStateFormIndex] = useState(0);
 
-  const [stateFormIndex, stateFormIndexDispatch] = useReducer(
-    stateFormIndexReducer,
-    0,
-  );
   const [inputValue, inputDispatch] = useReducer(inputReducer, "");
 
   useEffect(() => {
@@ -84,7 +65,6 @@ export default function Preview(props: { formId: number }) {
       />
     );
   } else if (state.formFields.length === 0) {
-    console.log(state);
     return <Error errorMsg="No Questions" desc="This form has no questions" />;
   }
 
@@ -94,8 +74,8 @@ export default function Preview(props: { formId: number }) {
         <RadioPreview
           options={formValues.options}
           selectedInputValue={inputValue}
-          setInputValueFunctionForRadioCB={(value: string) => {
-            inputDispatch({ type: "edit_input_value_for_radio", value });
+          setInputValueUsingStringCB={(value: string) => {
+            inputDispatch({ type: "edit_input_value_using_string", value });
           }}
         />
       );
@@ -104,7 +84,7 @@ export default function Preview(props: { formId: number }) {
         <MultiSelectPreview
           options={formValues.options}
           inputValue={inputValue}
-          setInputValueForMultiSelect={(value: string[]) => {
+          setInputValueForMultiSelectCB={(value: string[]) => {
             inputDispatch({
               type: "edit_input_value_for_multi_select",
               value,
@@ -120,8 +100,8 @@ export default function Preview(props: { formId: number }) {
           max={formValues.max}
           step={formValues.step}
           inputValue={inputValue}
-          setInputValueUsingECB={(e: React.ChangeEvent<HTMLInputElement>) => {
-            inputDispatch({ type: "edit_input_value_using_e", e });
+          setInputValueUsingStringCB={(value: string) => {
+            inputDispatch({ type: "edit_input_value_using_string", value });
           }}
         />
       );
@@ -130,8 +110,8 @@ export default function Preview(props: { formId: number }) {
         <TextPreview
           fieldType={formValues.fieldType}
           inputValue={inputValue}
-          setInputValueUsingECB={(e: React.ChangeEvent<HTMLInputElement>) => {
-            inputDispatch({ type: "edit_input_value_using_e", e });
+          setInputValueUsingStringCB={(value: string) => {
+            inputDispatch({ type: "edit_input_value_using_string", value });
           }}
         />
       );
@@ -141,6 +121,27 @@ export default function Preview(props: { formId: number }) {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="text-center text-2xl font-bold">{title}</div>
+      <div className="text-center text-xl flex">
+        <span className="text-gray-500 font-bold">Question</span>
+        &nbsp;:&nbsp;
+        <p className="font-bold">
+          {stateFormIndex + 1}&nbsp;
+          <span className="font-normal">of</span>
+          &nbsp;{state.formFields.length}
+        </p>
+      </div>
+      <div
+        className="flex-start flex h-2 overflow-hidden mt-2 rounded-xl bg-gray-300 font-sans text-xs font-medium"
+        style={{ width: "50%" }}
+      >
+        <div
+          className="flex h-full items-baseline justify-center overflow-hidden break-all bg-green-500 text-white"
+          style={{
+            width: `${((stateFormIndex + 1) * 100) / state.formFields.length}%`,
+            transition: "width 0.5s ease-in-out",
+          }}
+        ></div>
+      </div>
       <div className="flex flex-col justify-center items-center mt-5 border-2 border-gray-300 p-5 rounded-lg">
         <label className="text-center text-xl font-bold">
           {state.formFields[stateFormIndex].label}
@@ -159,9 +160,7 @@ export default function Preview(props: { formId: number }) {
           className="border-2 bg-blue-600 text-white rounded-lg p-2 m-2 disabled:hidden"
           disabled={stateFormIndex === 0}
           onClick={() => {
-            stateFormIndexDispatch({
-              type: "decrease_index_value",
-            });
+            setStateFormIndex((stateFormIndex) => stateFormIndex - 1);
             if (form[stateFormIndex - 1])
               inputDispatch({
                 type: "set_input_value_based_on_index",
@@ -176,10 +175,7 @@ export default function Preview(props: { formId: number }) {
           className="border-2 text-white bg-blue-600 rounded-lg p-2 m-2 disabled:hidden"
           disabled={stateFormIndex === state.formFields.length - 1}
           onClick={() => {
-            stateFormIndexDispatch({
-              type: "increase_index_value",
-            });
-            console.log(stateFormIndex);
+            setStateFormIndex((stateFormIndex) => stateFormIndex + 1);
             if (form[stateFormIndex + 1])
               inputDispatch({
                 type: "set_input_value_based_on_index",
@@ -194,9 +190,7 @@ export default function Preview(props: { formId: number }) {
           className="border-2 text-white bg-green-500 rounded-lg p-2 m-2 disabled:hidden"
           disabled={stateFormIndex !== state.formFields.length - 1}
           onClick={() => {
-            stateFormIndexDispatch({
-              type: "increase_index_value",
-            });
+            setStateFormIndex((stateFormIndex) => stateFormIndex + 1);
             console.log(form);
             navigate("/");
           }}
