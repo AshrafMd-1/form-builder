@@ -47,16 +47,12 @@ export default function Preview(props: { formId: number }) {
     return <Error errorMsg="No Questions" desc="This form has no questions"/>;
   }
 
-  const setInputValueUsingE = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  }
-
-  const setInputValueForRadio = (value: string) => {
+  const setInputValueUsingString = (value: string) => {
     setInputValue(value);
   }
 
   const setInputValueForMultiSelect = (value: string[]) => {
-    const newValue = value.join("|").trim();
+    const newValue = value.filter((v) => v !== "").join(" | ");
     setInputValue(newValue);
   }
 
@@ -68,14 +64,15 @@ export default function Preview(props: { formId: number }) {
           <RadioPreview
               options={formValues.options}
               selectedInputValue={inputValue}
-              setInputValueFunctionForRadioCB={setInputValueForRadio}/>
+              setInputValueUsingStringCB={setInputValueUsingString}
+          />
       );
     } else if (formValues.kind === "multi-select") {
       return (
           <MultiSelectPreview
               options={formValues.options}
               inputValue={inputValue}
-              setInputValueForMultiSelect={setInputValueForMultiSelect}
+              setInputValueForMultiSelectCB={setInputValueForMultiSelect}
           />
       );
     } else if (formValues.kind === "range") {
@@ -86,14 +83,16 @@ export default function Preview(props: { formId: number }) {
               max={formValues.max}
               step={formValues.step}
               inputValue={inputValue}
-              setInputValueUsingECB={setInputValueUsingE}/>
+              setInputValueUsingStringCB={setInputValueUsingString}
+          />
       );
     } else {
       return (
           <TextPreview
               fieldType={formValues.fieldType}
               inputValue={inputValue}
-              setInputValueUsingECB={setInputValueUsingE}/>
+              setInputValueUsingStringCB={setInputValueUsingString}
+          />
       );
     }
   }
@@ -115,8 +114,17 @@ export default function Preview(props: { formId: number }) {
             &nbsp;{state.formFields.length}
           </p>
         </div>
-        <div className="text-center text-xl font-bold">
-          <p>{inputValue}</p>
+        <div
+            className="flex-start flex h-2 overflow-hidden mt-2 rounded-xl bg-gray-300 font-sans text-xs font-medium"
+            style={{width: "50%"}}
+        >
+          <div
+              className="flex h-full items-baseline justify-center overflow-hidden break-all bg-green-500 text-white"
+              style={{
+                width: `${(stateFormFieldIndex + 1) * 100 / state.formFields.length}%`,
+                transition: "width 0.5s ease-in-out"
+              }}
+          ></div>
         </div>
         <div className="flex flex-col justify-center items-center mt-5 border-2 border-gray-300 p-5 rounded-lg">
           <label className="text-center text-xl font-bold">

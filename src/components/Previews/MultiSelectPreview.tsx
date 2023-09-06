@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 interface MultiSelectPreviewProps {
   options: string[],
   inputValue: string,
-  setInputValueForMultiSelect: (value: string[]) => void;
+  setInputValueForMultiSelectCB: (value: string[]) => void;
 }
 
 export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
@@ -13,12 +13,11 @@ export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
     setIsOpen(!isOpen);
   };
 
-
   const toggleOption = (option: string) => {
     if (props.inputValue.includes(option)) {
-      props.setInputValueForMultiSelect(props.inputValue.split("|").filter((value) => value !== option));
+      props.setInputValueForMultiSelectCB(props.inputValue.split(" | ").filter((value) => value !== option));
     } else {
-      props.setInputValueForMultiSelect([...props.inputValue.split("|"), option]);
+      props.setInputValueForMultiSelectCB([...props.inputValue.split(" | "), option]);
     }
   };
 
