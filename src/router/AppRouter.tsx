@@ -6,6 +6,7 @@ import Home from "../components/Home";
 import Preview from "../components/Preview";
 import { Error } from "../components/Error";
 import Login from "../components/Login";
+import { User } from "../types/userTypes";
 
 const routes = {
   "/": () => <Home />,
@@ -21,7 +22,9 @@ const routes = {
   ),
 };
 
-export const AppRouter = () => {
+export const AppRouter = (props: { currentUser: User }) => {
   let routeResult = useRoutes(routes);
-  return <AppContainer>{routeResult}</AppContainer>;
+  return (
+    <AppContainer currentUser={props.currentUser}>{routeResult}</AppContainer>
+  );
 };

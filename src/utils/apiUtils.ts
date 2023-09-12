@@ -1,4 +1,5 @@
 import { Form } from "../types/formTypes";
+import { PaginationParams } from "../types/common";
 
 const API_BASE_URL = "https://tsapi.coronasafe.live/api/";
 
@@ -19,8 +20,8 @@ export const request = async (
     url = API_BASE_URL + endpoint;
     payload = data ? JSON.stringify(data) : "";
   }
-
-  const auth = "Basic " + btoa("ashrafmd-1:Arquenium");
+  const token = localStorage.getItem("token");
+  const auth = token ? "Token " + localStorage.getItem("token") : "";
 
   const response = await fetch(url, {
     method,
@@ -28,7 +29,7 @@ export const request = async (
       "Content-Type": "application/json",
       Authorization: auth,
     },
-    body: payload,
+    body: method !== "GET" ? payload : null,
   });
   if (response.ok) {
     return await response.json();
@@ -42,6 +43,14 @@ export const createForm = async (form: Form) => {
   return await request("forms/", "POST", form);
 };
 
+export const me = () => {
+  return request("users/", "GET", {});
+};
+
 export const login = (username: string, password: string) => {
   return request("auth-token/", "POST", { username, password });
+};
+
+export const listForms = (pageParams: PaginationParams) => {
+  return request("forms/", "GET", pageParams);
 };

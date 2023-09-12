@@ -4,11 +4,19 @@ import { useQueryParams } from "raviger";
 import { Form } from "../types/formTypes";
 import Modal from "./common/Modal";
 import CreateForm from "./CreateForm";
+import { listForms } from "../utils/apiUtils";
+import { Pagination } from "../types/common";
 
 const fetchForms = async (setFormCB: (value: Form[]) => void) => {
-  const response = await fetch("https://tsapi.coronasafe.live/api/mock_test/");
-  const jsonDate = await response.json();
-  setFormCB(jsonDate);
+  try {
+    const data: Pagination<Form> = await listForms({
+      offset: 0,
+      limit: 3,
+    });
+    setFormCB(data.results);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export default function Home() {

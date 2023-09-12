@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { navigate } from "raviger";
 import { login } from "../utils/apiUtils";
 
@@ -11,11 +11,18 @@ export default function Login() {
     try {
       const data = await login(username, password);
       localStorage.setItem("token", data.token);
-      navigate("/");
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="w-full max-w-lg divide-y mx-auto divide-gray-200">
