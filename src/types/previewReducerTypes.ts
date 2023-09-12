@@ -1,5 +1,3 @@
-import React from "react";
-
 type EditInputValueUsingString = {
   type: "edit_input_value_using_string";
   value: string;
@@ -23,4 +21,3 @@ export type InputValueActions =
   | EditInputValueForMultiSelect
   | SetInputValueBasedOnIndexValue
   | SetEmptyInputValue;
-

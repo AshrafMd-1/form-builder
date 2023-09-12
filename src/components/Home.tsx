@@ -1,47 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AllForms } from "./AllForms";
-import {
-  getLocalForms,
-  initialFormFields,
-  saveLocalForms,
-} from "../utils/utils";
-import { navigate, useQueryParams } from "raviger";
+import { useQueryParams } from "raviger";
+import { Form } from "../types/formTypes";
+import Modal from "./common/Modal";
+import CreateForm from "./CreateForm";
 
-const getAllForms = () => {
-  const localForms = getLocalForms();
-  return localForms.map((form) => {
-    return {
-      id: form.id,
-      title: form.title,
-      question: form.formFields.length,
-    };
-  });
+const fetchForms = async (setFormCB: (value: Form[]) => void) => {
+  const response = await fetch("https://tsapi.coronasafe.live/api/mock_test/");
+  const jsonDate = await response.json();
+  setFormCB(jsonDate);
 };
 
 export default function Home() {
-  const [state, setState] = useState(() => getAllForms());
   const [{ search }, setQuery] = useQueryParams();
   const [searchString, setSearchString] = useState("");
+  const [forms, setForms] = useState<Form[]>(() => {
+    const localForms = localStorage.getItem("savedForms2");
+    return localForms ? JSON.parse(localForms) : [];
+  });
+  const [newForm, setNewForm] = useState(false);
 
-  const addForm = () => {
-    const localForms = getLocalForms();
-    const id = Number(new Date());
-    const newForm = {
-      id: id,
-      title: "Untitled Form",
-      formFields: initialFormFields,
-    };
-    saveLocalForms([...localForms, newForm]);
-    setState(getAllForms());
-    navigate("/forms/" + id);
-  };
+  useEffect(() => {
+    localStorage.setItem("savedForms2", JSON.stringify(forms));
+  }, [forms]);
 
-  const removeForm = (id: number) => {
-    const localForms = getLocalForms();
-    const newLocalForms = localForms.filter((form) => form.id !== id);
-    saveLocalForms(newLocalForms);
-    setState(getAllForms());
-  };
+  useEffect(() => {
+    fetchForms(setForms);
+  }, []);
+
+  // const addForm = () => {
+  //   const localForms = getLocalForms();
+  //   const id = Number(new Date());
+  //   const newForm = {
+  //     id: id,
+  //     title: "Untitled Form",
+  //     description: "",
+  //     is_public: false,
+  //   };
+  //   saveLocalForms([...localForms, newForm]);
+  //   setForms(getLocalForms());
+  //   navigate("/forms/" + id);
+  // };
+
+  // const removeForm = (id: number) => {
+  //   const localForms = getLocalForms();
+  //   const newLocalForms = localForms.filter((form) => form.id !== id);
+  //   saveLocalForms(newLocalForms);
+  //   setForms(getLocalForms());
+  // };
 
   return (
     <div className="flex flex-col justify-content">
@@ -63,11 +69,14 @@ export default function Home() {
         </form>
       </div>
       <AllForms
-        forms={state}
-        addFormCB={addForm}
-        removeFormCB={removeForm}
+        forms={forms}
+        addFormCB={() => setNewForm(true)}
+        removeFormCB={(id) => {}}
         search={search}
       />
+      <Modal open={newForm} closeCB={() => setNewForm(false)}>
+        <CreateForm />
+      </Modal>
     </div>
   );
 }

@@ -5,10 +5,12 @@ import { AppContainer } from "../AppContainer";
 import Home from "../components/Home";
 import Preview from "../components/Preview";
 import { Error } from "../components/Error";
+import Login from "../components/Login";
 
 const routes = {
   "/": () => <Home />,
   "/about": () => <About />,
+  "/login": () => <Login />,
   "/forms/:id": ({ id }: { id: string }) => <Form formId={Number(id)} />,
   "/preview/:id": ({ id }: { id: string }) => <Preview formId={Number(id)} />,
   "/*": () => (

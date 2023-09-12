@@ -18,6 +18,7 @@ export const Header = (props: { title: string }) => {
         {[
           { page: "Home", url: "/" },
           { page: "About", url: "/about" },
+          { page: "Login", url: "/login" },
         ].map((link) => (
           <ActiveLink
             key={link.url}

@@ -1,9 +1,9 @@
 import React from "react";
-import { formInfo } from "../types/formTypes";
+import { Form } from "../types/formTypes";
 import { Link } from "raviger";
 
 export const AllForms = (prop: {
-  forms: formInfo[];
+  forms: Form[];
   addFormCB: () => void;
   removeFormCB: (id: number) => void;
   search: string;
@@ -31,7 +31,7 @@ export const AllForms = (prop: {
                 .toLowerCase()
                 .includes(prop.search?.toLowerCase() || "");
             })
-            .map((form: formInfo) => (
+            .map((form: Form) => (
               <div
                 key={form.id}
                 className="grid grid-cols-5 gap-4 m-2 p-2 w-full mx-5  bg-blue-500 text-white items-center rounded-xl focus:outline-none focus:shadow-outline-blue"
@@ -40,61 +40,61 @@ export const AllForms = (prop: {
                   {form.title}
                 </p>
                 <div className="flex justify-center items-center">
-                  {form.question === 0 ? (
-                    <div className="font-bold text-center  ">No Questions</div>
-                  ) : (
-                    <div className=" font-bold text-center">
-                      Questions : {form.question}
-                    </div>
-                  )}
+                  {/*{form.formFields.length === 0 ? (*/}
+                  {/*  <div className="font-bold text-center  ">No Questions</div>*/}
+                  {/*) : (*/}
+                  {/*  <div className=" font-bold text-center">*/}
+                  {/*    Questions : {form.formFields.length}*/}
+                  {/*  </div>*/}
+                  {/*)}*/}
                 </div>
                 <div className="flex col-span-2 justify-center items-center gap-2 flex-wrap">
-                  {form.question === 0 ? (
-                    <Link
-                      href={"/"}
-                      className="bg-green-500 font-bold  rounded-lg hover:bg-green-600 px-3 py-1 opacity-50 cursor-not-allowed"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"
-                        />
-                      </svg>
-                    </Link>
-                  ) : (
-                    <Link
-                      href={"/preview/" + form.id}
-                      className="bg-green-500 font-bold  rounded-lg hover:bg-green-600 px-3 py-1 "
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                    </Link>
-                  )}
+                  {/*{form.formFields.length === 0 ? (*/}
+                  {/*  <Link*/}
+                  {/*    href={"/"}*/}
+                  {/*    className="bg-green-500 font-bold  rounded-lg hover:bg-green-600 px-3 py-1 opacity-50 cursor-not-allowed"*/}
+                  {/*  >*/}
+                  {/*    <svg*/}
+                  {/*      xmlns="http://www.w3.org/2000/svg"*/}
+                  {/*      fill="none"*/}
+                  {/*      viewBox="0 0 24 24"*/}
+                  {/*      strokeWidth={1.5}*/}
+                  {/*      stroke="currentColor"*/}
+                  {/*      className="w-6 h-6"*/}
+                  {/*    >*/}
+                  {/*      <path*/}
+                  {/*        strokeLinecap="round"*/}
+                  {/*        strokeLinejoin="round"*/}
+                  {/*        d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"*/}
+                  {/*      />*/}
+                  {/*    </svg>*/}
+                  {/*  </Link>*/}
+                  {/*) : (*/}
+                  {/*  <Link*/}
+                  {/*    href={"/preview/" + form.id}*/}
+                  {/*    className="bg-green-500 font-bold  rounded-lg hover:bg-green-600 px-3 py-1 "*/}
+                  {/*  >*/}
+                  {/*    <svg*/}
+                  {/*      xmlns="http://www.w3.org/2000/svg"*/}
+                  {/*      fill="none"*/}
+                  {/*      viewBox="0 0 24 24"*/}
+                  {/*      strokeWidth={1.5}*/}
+                  {/*      stroke="currentColor"*/}
+                  {/*      className="w-6 h-6"*/}
+                  {/*    >*/}
+                  {/*      <path*/}
+                  {/*        strokeLinecap="round"*/}
+                  {/*        strokeLinejoin="round"*/}
+                  {/*        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"*/}
+                  {/*      />*/}
+                  {/*      <path*/}
+                  {/*        strokeLinecap="round"*/}
+                  {/*        strokeLinejoin="round"*/}
+                  {/*        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"*/}
+                  {/*      />*/}
+                  {/*    </svg>*/}
+                  {/*  </Link>*/}
+                  {/*)}*/}
                   <Link
                     href={"/forms/" + form.id}
                     className="bg-amber-400 font-bold  rounded-lg hover:bg-amber-500 px-3 py-1 "
@@ -116,7 +116,7 @@ export const AllForms = (prop: {
                   </Link>
                   <button
                     className=" bg-red-500  rounded-lg hover:bg-red-600 hover:text-white p-1"
-                    onClick={(_) => prop.removeFormCB(form.id)}
+                    onClick={(_) => prop.removeFormCB(form.id ? form.id : 0)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
