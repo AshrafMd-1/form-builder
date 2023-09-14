@@ -25,37 +25,26 @@ export interface formData {
 }
 
 type TextField = {
-  kind: "text";
+  kind: "TEXT";
   id: number;
   label: string;
-  fieldType: string;
   value: string;
 };
 
-type MultiSelectField = {
-  kind: "multi-select";
+type DropDownField = {
+  kind: "DROPDOWN";
   id: number;
   label: string;
-  options: string[];
-  value: string[];
+  options: { options: string[] };
+  value: string;
 };
 
 type RadioField = {
-  kind: "radio";
+  kind: "RADIO";
   id: number;
   label: string;
-  options: string[];
+  options: { options: string[] };
   value: string;
 };
 
-type RangeField = {
-  kind: "range";
-  id: number;
-  label: string;
-  min: number;
-  max: number;
-  step: number;
-  value: number;
-};
-
-export type formField = TextField | MultiSelectField | RadioField | RangeField;
+export type formField = TextField | DropDownField | RadioField;

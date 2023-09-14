@@ -1,4 +1,4 @@
-import { Form } from "../types/formTypes";
+import { Form, formField } from "../types/formTypes";
 import { PaginationParams } from "../types/common";
 
 const API_BASE_URL = "https://tsapi.coronasafe.live/api/";
@@ -31,7 +31,9 @@ export const request = async (
     },
     body: method !== "GET" ? payload : null,
   });
-  if (response.ok) {
+  if (response.status === 204) {
+    return {};
+  } else if (response.ok) {
     return await response.json();
   } else {
     const errorJson = await response.json();
@@ -53,4 +55,42 @@ export const login = (username: string, password: string) => {
 
 export const listForms = (pageParams: PaginationParams) => {
   return request("forms/", "GET", pageParams);
+};
+
+export const deleteForm = (formId: number) => {
+  return request(`forms/${formId}/`, "DELETE");
+};
+
+export const getFormFields = (formId: number) => {
+  return request(`forms/${formId}/fields/`, "GET");
+};
+
+export const getFormDetails = (formId: number) => {
+  return request(`forms/${formId}/`, "GET");
+};
+
+export const addFormField = (formId: number, formField: formField) => {
+  return request(`forms/${formId}/fields/`, "POST", formField);
+};
+
+export const updateTitle = (formId: number, title: string) => {
+  return request(`forms/${formId}/`, "PATCH", { title });
+};
+
+export const deleteFormField = (formId: number, formFieldId: number) => {
+  return request(`forms/${formId}/fields/${formFieldId}/`, "DELETE");
+};
+
+export const updateOptionOfFormField = async (
+  formId: number,
+  formFieldId: number,
+  label: string,
+  kind: string,
+  options: { options: string[] },
+) => {
+  return request(`forms/${formId}/fields/${formFieldId}/`, "PUT", {
+    label,
+    kind,
+    options,
+  });
 };

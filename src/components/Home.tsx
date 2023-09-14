@@ -4,14 +4,14 @@ import { useQueryParams } from "raviger";
 import { Form } from "../types/formTypes";
 import Modal from "./common/Modal";
 import CreateForm from "./CreateForm";
-import { listForms } from "../utils/apiUtils";
+import { deleteForm, listForms } from "../utils/apiUtils";
 import { Pagination } from "../types/common";
 
 const fetchForms = async (setFormCB: (value: Form[]) => void) => {
   try {
     const data: Pagination<Form> = await listForms({
       offset: 0,
-      limit: 3,
+      limit: 10,
     });
     setFormCB(data.results);
   } catch (err) {
@@ -23,39 +23,23 @@ export default function Home() {
   const [{ search }, setQuery] = useQueryParams();
   const [searchString, setSearchString] = useState("");
   const [forms, setForms] = useState<Form[]>(() => {
-    const localForms = localStorage.getItem("savedForms2");
+    const localForms = localStorage.getItem("allForms");
     return localForms ? JSON.parse(localForms) : [];
   });
   const [newForm, setNewForm] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("savedForms2", JSON.stringify(forms));
+    localStorage.setItem("allForms", JSON.stringify(forms));
   }, [forms]);
 
   useEffect(() => {
     fetchForms(setForms);
   }, []);
 
-  // const addForm = () => {
-  //   const localForms = getLocalForms();
-  //   const id = Number(new Date());
-  //   const newForm = {
-  //     id: id,
-  //     title: "Untitled Form",
-  //     description: "",
-  //     is_public: false,
-  //   };
-  //   saveLocalForms([...localForms, newForm]);
-  //   setForms(getLocalForms());
-  //   navigate("/forms/" + id);
-  // };
-
-  // const removeForm = (id: number) => {
-  //   const localForms = getLocalForms();
-  //   const newLocalForms = localForms.filter((form) => form.id !== id);
-  //   saveLocalForms(newLocalForms);
-  //   setForms(getLocalForms());
-  // };
+  const removeForm = async (id: number) => {
+    await deleteForm(id);
+    setForms(forms.filter((form) => form.id !== id));
+  };
 
   return (
     <div className="flex flex-col justify-content">
@@ -79,7 +63,7 @@ export default function Home() {
       <AllForms
         forms={forms}
         addFormCB={() => setNewForm(true)}
-        removeFormCB={(id) => {}}
+        removeFormCB={removeForm}
         search={search}
       />
       <Modal open={newForm} closeCB={() => setNewForm(false)}>

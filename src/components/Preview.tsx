@@ -1,12 +1,10 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { checkFormBasedOnID, getLocalForms } from "../utils/utils";
+import { getLocalForms } from "../utils/utils";
 import { navigate } from "raviger";
 import { formField } from "../types/formTypes";
-import { Error } from "./Error";
 import { TextPreview } from "./Previews/TextPreview";
 import { RadioPreview } from "./Previews/RadioPreview";
 import { MultiSelectPreview } from "./Previews/MultiSelectPreview";
-import { RangePreview } from "./Previews/RangePreview";
 import { InputValueActions } from "../types/previewReducerTypes";
 
 const initialState = (id: number) => {
@@ -57,32 +55,32 @@ export default function Preview(props: { formId: number }) {
 
   const title = state.title;
 
-  if (!checkFormBasedOnID(props.formId)) {
-    return (
-      <Error
-        errorMsg="Preview Not Found"
-        desc="A preview with this ID does not exist"
-      />
-    );
-  } else if (state.formFields.length === 0) {
-    return <Error errorMsg="No Questions" desc="This form has no questions" />;
-  }
+  // if (!checkFormBasedOnID(props.formId)) {
+  //   return (
+  //     <Error
+  //       errorMsg="Preview Not Found"
+  //       desc="A preview with this ID does not exist"
+  //     />
+  //   );
+  // } else if (state.formFields.length === 0) {
+  //   return <Error errorMsg="No Questions" desc="This form has no questions" />;
+  // }
 
   const renderField = (formValues: formField) => {
-    if (formValues.kind === "radio") {
+    if (formValues.kind === "RADIO") {
       return (
         <RadioPreview
-          options={formValues.options}
+          options={formValues.options.options}
           selectedInputValue={inputValue}
           setInputValueUsingStringCB={(value: string) => {
             inputDispatch({ type: "edit_input_value_using_string", value });
           }}
         />
       );
-    } else if (formValues.kind === "multi-select") {
+    } else if (formValues.kind === "DROPDOWN") {
       return (
         <MultiSelectPreview
-          options={formValues.options}
+          options={formValues.options.options}
           inputValue={inputValue}
           setInputValueForMultiSelectCB={(value: string[]) => {
             inputDispatch({
@@ -92,23 +90,10 @@ export default function Preview(props: { formId: number }) {
           }}
         />
       );
-    } else if (formValues.kind === "range") {
-      return (
-        <RangePreview
-          kind={formValues.kind}
-          min={formValues.min}
-          max={formValues.max}
-          step={formValues.step}
-          inputValue={inputValue}
-          setInputValueUsingStringCB={(value: string) => {
-            inputDispatch({ type: "edit_input_value_using_string", value });
-          }}
-        />
-      );
     } else {
       return (
         <TextPreview
-          fieldType={formValues.fieldType}
+          fieldType={formValues.kind}
           inputValue={inputValue}
           setInputValueUsingStringCB={(value: string) => {
             inputDispatch({ type: "edit_input_value_using_string", value });

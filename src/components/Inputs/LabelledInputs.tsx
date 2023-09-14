@@ -6,7 +6,6 @@ interface LabelledInputsProps {
   fieldType: string;
   count: number;
   removeFieldCB: (id: number) => void;
-  columnChangeHandlerCB: (id: number, value: string) => void;
 }
 
 export default function LabelledInputs(props: LabelledInputsProps) {
@@ -19,22 +18,14 @@ export default function LabelledInputs(props: LabelledInputsProps) {
         </div>
         <div className="flex flex-col">
           <label className="mr-2 font-bold">Column</label>
-          <input
-            className="border-2 mt-2 border-gray-300 bg-white h-10 px-2 pr-1 rounded-lg text-m focus:outline-none invalid:border-red-500"
-            type="text"
-            name="label"
-            value={props.label}
-            onChange={(e) =>
-              props.columnChangeHandlerCB(props.id, e.target.value)
-            }
-          />
+          <label className="text-xl mb-2 mx-auto">{props.label}</label>
         </div>
         <div className="flex flex-col ">
           <label className="mb-auto  mx-auto font-bold">Type</label>
           <label className="text-xl mb-2 mx-auto">{props.fieldType}</label>
         </div>
         <button
-          className="ml-2 mt-auto bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg px-3 py-2 focus:outline-none focus:shadow-outline-red active:bg-red-500"
+          className="ml-2 my-auto bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg px-3 py-2 focus:outline-none focus:shadow-outline-red active:bg-red-500"
           onClick={() => props.removeFieldCB(props.id)}
         >
           <svg

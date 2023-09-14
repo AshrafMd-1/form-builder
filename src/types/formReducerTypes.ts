@@ -1,5 +1,16 @@
 import { formField } from "./formTypes";
 
+type UpdateFormDetails = {
+  type: "update_form_details";
+  id: number;
+  title: string;
+};
+
+type UpdateFormFields = {
+  type: "update_form_fields";
+  formFields: formField[];
+};
+
 type ChangeFormTitle = {
   type: "change_form_title";
   title: string;
@@ -16,12 +27,6 @@ type RemoveFieldFromForm = {
   id: number;
 };
 
-type EditFormFieldLabel = {
-  type: "edit_form_field_label";
-  id: number;
-  label: string;
-};
-
 type AddOptionToFormField = {
   type: "add_option_to_form_field";
   id: number;
@@ -34,31 +39,11 @@ type RemoveOptionFromFormField = {
   index: number;
 };
 
-type EditRangeMinOfFormField = {
-  type: "edit_range_min_of_form_field";
-  id: number;
-  min: number;
-};
-
-type EditRangeMaxOfFormField = {
-  type: "edit_range_max_of_form_field";
-  id: number;
-  max: number;
-};
-
-type EditRangeStepOfFormField = {
-  type: "edit_range_step_of_form_field";
-  id: number;
-  step: number;
-};
-
 export type FormAction =
+  | UpdateFormDetails
+  | UpdateFormFields
   | ChangeFormTitle
   | AddFieldToForm
   | RemoveFieldFromForm
-  | EditFormFieldLabel
   | AddOptionToFormField
-  | RemoveOptionFromFormField
-  | EditRangeMinOfFormField
-  | EditRangeMaxOfFormField
-  | EditRangeStepOfFormField;
+  | RemoveOptionFromFormField;
