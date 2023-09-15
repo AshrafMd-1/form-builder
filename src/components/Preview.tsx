@@ -69,7 +69,7 @@ export default function Preview(props: { formId: number }) {
       return newForm;
     });
     return () => {};
-  }, [stateFormIndex, inputValue]);
+  }, [stateFormIndex, inputValue,state.formFields]);
 
   const title = state.title;
 
@@ -92,7 +92,7 @@ export default function Preview(props: { formId: number }) {
       }
     };
     fetchFormDetailsAndFields();
-  }, []);
+  }, [props.formId]);
 
   const renderField = (formValues: formField) => {
     if (formValues.kind === "RADIO") {

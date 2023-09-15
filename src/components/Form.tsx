@@ -158,19 +158,19 @@ export default function Form(props: { formId: number }) {
     };
     fetchFormDetails();
     fetchFormFields();
-  }, []);
+  }, [props.formId]);
 
   useEffect(() => {
     if (state.title === "" || state.id === 0) return;
     const timeout = setTimeout(() => {
-      updateTitle(props.formId, state.title);
+      updateTitle(state.id, state.title);
       console.log("Title Updated");
     }, 3000);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [state.title]);
+  }, [state.title, state.id]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -229,6 +229,10 @@ export default function Form(props: { formId: number }) {
                           ]
                         : [...new Set([...field.options.options, option])],
                   };
+                } else {
+                  return {
+                    options: [],
+                  };
                 }
               });
               if (
@@ -283,6 +287,8 @@ export default function Form(props: { formId: number }) {
                             ],
                           },
                   };
+                } else {
+                  return undefined;
                 }
               });
               if (

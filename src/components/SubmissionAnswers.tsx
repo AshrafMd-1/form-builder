@@ -19,7 +19,7 @@ export const SubmissionAnswers = (props: {
     getSubmission(props.formId, props.submissionId).then((data) => {
       setSubmission(data);
     });
-  }, []);
+  }, [props.formId, props.submissionId]);
 
   useEffect(() => {
     const fetchFormDetailsAndFields = async () => {
@@ -40,7 +40,7 @@ export const SubmissionAnswers = (props: {
       }
     };
     fetchFormDetailsAndFields();
-  }, []);
+  }, [props.formId]);
 
   if (notFound) {
     return (
