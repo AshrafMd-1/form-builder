@@ -1,13 +1,20 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { getLocalForms } from "../utils/utils";
 import { navigate } from "raviger";
-import { formField } from "../types/formTypes";
+import { formAnswers, formField } from "../types/formTypes";
 import { TextPreview } from "./Previews/TextPreview";
 import { RadioPreview } from "./Previews/RadioPreview";
 import { MultiSelectPreview } from "./Previews/MultiSelectPreview";
 import { InputValueActions } from "../types/previewReducerTypes";
+import {
+  getFormDetails,
+  getFormFields,
+  me,
+  submitForm,
+} from "../utils/apiUtils";
+import { Error } from "./Error";
 
-const initialState = (id: number) => {
+export const initialState = (id: number) => {
   const form = getLocalForms().find((form) => form.id === id);
   return form
     ? form
@@ -38,16 +45,27 @@ const inputReducer = (state: string, action: InputValueActions) => {
 };
 
 export default function Preview(props: { formId: number }) {
-  const [state] = useState(() => initialState(props.formId));
-  const [form, setForm] = useState<string[]>([]);
+  const [state, setState] = useState(() => initialState(props.formId));
+  const [form, setForm] = useState<formAnswers[]>([]);
+  const [notFound, setNotFound] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
   const [stateFormIndex, setStateFormIndex] = useState(0);
 
   const [inputValue, inputDispatch] = useReducer(inputReducer, "");
 
   useEffect(() => {
+    me().then((data) => {
+      setCurrentUser(data.results[0]);
+    });
+  }, []);
+
+  useEffect(() => {
     setForm((form) => {
       const newForm = [...form];
-      newForm[stateFormIndex] = inputValue;
+      newForm[stateFormIndex] = {
+        form_field: state.formFields[stateFormIndex]?.id || 0,
+        value: inputValue,
+      };
       return newForm;
     });
     return () => {};
@@ -55,16 +73,26 @@ export default function Preview(props: { formId: number }) {
 
   const title = state.title;
 
-  // if (!checkFormBasedOnID(props.formId)) {
-  //   return (
-  //     <Error
-  //       errorMsg="Preview Not Found"
-  //       desc="A preview with this ID does not exist"
-  //     />
-  //   );
-  // } else if (state.formFields.length === 0) {
-  //   return <Error errorMsg="No Questions" desc="This form has no questions" />;
-  // }
+  useEffect(() => {
+    const fetchFormDetailsAndFields = async () => {
+      try {
+        const form = await getFormDetails(props.formId);
+        const formFields = await getFormFields(props.formId).then(
+          (data) => data.results,
+        );
+        setState((state) => ({
+          ...state,
+          id: form.id,
+          title: form.title,
+          formFields,
+        }));
+      } catch (err) {
+        setNotFound(true);
+        console.error(err);
+      }
+    };
+    fetchFormDetailsAndFields();
+  }, []);
 
   const renderField = (formValues: formField) => {
     if (formValues.kind === "RADIO") {
@@ -102,6 +130,38 @@ export default function Preview(props: { formId: number }) {
       );
     }
   };
+
+  if (notFound)
+    return (
+      <Error
+        errorMsg="Form Not Found"
+        desc="A form with this ID does not exist"
+      />
+    );
+
+  if (!currentUser)
+    return (
+      <Error
+        errorMsg={"Login Required"}
+        desc={"You need to login to access this page"}
+      />
+    );
+
+  if (!state || !state.formFields)
+    return (
+      <Error
+        errorMsg={"Preview Not Available"}
+        desc={"This form is not available for preview"}
+      />
+    );
+
+  if (state.formFields.length === 0)
+    return (
+      <Error
+        errorMsg={"Preview Not Available"}
+        desc={"This form has no fields"}
+      />
+    );
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -149,22 +209,25 @@ export default function Preview(props: { formId: number }) {
             if (form[stateFormIndex - 1])
               inputDispatch({
                 type: "set_input_value_based_on_index",
-                value: form[stateFormIndex - 1],
+                value: form[stateFormIndex - 1].value,
               });
             else inputDispatch({ type: "set_empty_input_value" });
           }}
         >
-          Previous
+          previous
         </button>
         <button
           className="border-2 text-white bg-blue-600 rounded-lg p-2 m-2 disabled:hidden"
-          disabled={stateFormIndex === state.formFields.length - 1}
+          disabled={
+            stateFormIndex === state.formFields.length - 1 ||
+            inputValue.length === 0
+          }
           onClick={() => {
             setStateFormIndex((stateFormIndex) => stateFormIndex + 1);
             if (form[stateFormIndex + 1])
               inputDispatch({
                 type: "set_input_value_based_on_index",
-                value: form[stateFormIndex + 1],
+                value: form[stateFormIndex + 1].value,
               });
             else inputDispatch({ type: "set_empty_input_value" });
           }}
@@ -173,10 +236,16 @@ export default function Preview(props: { formId: number }) {
         </button>
         <button
           className="border-2 text-white bg-green-500 rounded-lg p-2 m-2 disabled:hidden"
-          disabled={stateFormIndex !== state.formFields.length - 1}
+          disabled={
+            stateFormIndex !== state.formFields.length - 1 ||
+            inputValue.length === 0
+          }
           onClick={() => {
             setStateFormIndex((stateFormIndex) => stateFormIndex + 1);
             console.log(form);
+            submitForm(props.formId, form, {
+              title: state.title,
+            });
             navigate("/");
           }}
         >

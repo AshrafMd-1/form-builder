@@ -5,6 +5,25 @@ export type Form = {
   is_public: boolean;
 };
 
+export type submitAnswers = {
+  answers: [
+    {
+      form_field: number;
+      value: string;
+    },
+  ];
+  form: {
+    title: string;
+    description?: string;
+    is_public?: boolean;
+  };
+};
+
+export type formAnswers = {
+  form_field: number;
+  value: string;
+};
+
 export type Errors<T> = Partial<Record<keyof T, string>>;
 
 export const validateForm = (form: Form) => {

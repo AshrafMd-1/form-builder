@@ -1,4 +1,4 @@
-import { Form, formField } from "../types/formTypes";
+import { Form, formAnswers, formField } from "../types/formTypes";
 import { PaginationParams } from "../types/common";
 
 const API_BASE_URL = "https://tsapi.coronasafe.live/api/";
@@ -93,4 +93,27 @@ export const updateOptionOfFormField = async (
     kind,
     options,
   });
+};
+
+export const submitForm = async (
+  formId: number,
+  answers: formAnswers[],
+  form: {
+    title: string;
+    description?: string;
+    is_public?: boolean;
+  },
+) => {
+  return request(`forms/${formId}/submission/`, "POST", {
+    answers,
+    form,
+  });
+};
+
+export const getFormSubmissions = async (formId: number) => {
+  return request(`forms/${formId}/submission/`, "GET");
+};
+
+export const getSubmission = async (formId: number, submissionId: number) => {
+  return request(`forms/${formId}/submission/${submissionId}/`, "GET");
 };

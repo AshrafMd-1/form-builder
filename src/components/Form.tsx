@@ -10,10 +10,12 @@ import {
   deleteFormField,
   getFormDetails,
   getFormFields,
+  me,
   updateOptionOfFormField,
   updateTitle,
 } from "../utils/apiUtils";
 import { Error } from "./Error";
+import { User } from "../types/userTypes";
 
 const getFormBasedOnID = (id: number) => {
   const localForms = getLocalForms();
@@ -107,8 +109,16 @@ const reducer = (state: formData, action: FormAction) => {
 export default function Form(props: { formId: number }) {
   const [state, dispatch] = useReducer(reducer, getFormBasedOnID(props.formId));
   const [newField, setNewField] = useState({ fieldType: "TEXT", value: "" });
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [notFound, setNotFound] = useState(false);
+
   const titleRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    me().then((data) => {
+      setCurrentUser(data.results[0]);
+    });
+  }, []);
 
   useEffect(() => {
     document.title = "Form Editor";
@@ -151,8 +161,7 @@ export default function Form(props: { formId: number }) {
   }, []);
 
   useEffect(() => {
-    if (state.title === "" || state.id === 0 || state.title === state.title)
-      return;
+    if (state.title === "" || state.id === 0) return;
     const timeout = setTimeout(() => {
       updateTitle(props.formId, state.title);
       console.log("Title Updated");
@@ -185,9 +194,10 @@ export default function Form(props: { formId: number }) {
             option={field.options.options}
             kind={field.kind}
             count={index + 1}
-            removeFieldCB={(id: number) =>
-              dispatch({ type: "remove_field_from_form", id })
-            }
+            removeFieldCB={(id: number) => {
+              deleteFormField(props.formId, id);
+              dispatch({ type: "remove_field_from_form", id });
+            }}
             addOptionCB={(
               id: number,
               label: string,
@@ -322,6 +332,14 @@ export default function Form(props: { formId: number }) {
       <Error
         errorMsg="Form Not Found"
         desc="A form with this ID does not exist"
+      />
+    );
+
+  if (!currentUser)
+    return (
+      <Error
+        errorMsg={"Login Required"}
+        desc={"You need to login to access this page"}
       />
     );
 

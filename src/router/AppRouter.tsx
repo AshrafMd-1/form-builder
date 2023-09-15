@@ -7,6 +7,8 @@ import Preview from "../components/Preview";
 import { Error } from "../components/Error";
 import Login from "../components/Login";
 import { User } from "../types/userTypes";
+import { Submission } from "../components/Submission";
+import { SubmissionAnswers } from "../components/SubmissionAnswers";
 
 const routes = {
   "/": () => <Home />,
@@ -14,6 +16,16 @@ const routes = {
   "/login": () => <Login />,
   "/forms/:id": ({ id }: { id: string }) => <Form formId={Number(id)} />,
   "/preview/:id": ({ id }: { id: string }) => <Preview formId={Number(id)} />,
+  "/submissions/:id": ({ id }: { id: string }) => (
+    <Submission formId={Number(id)} />
+  ),
+  "/submissions/:formId/answer/:id": ({
+    formId,
+    id,
+  }: {
+    formId: string;
+    id: string;
+  }) => <SubmissionAnswers formId={Number(formId)} submissionId={Number(id)} />,
   "/*": () => (
     <Error
       errorMsg="Page Not Found"

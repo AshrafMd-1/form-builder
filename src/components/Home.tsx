@@ -4,8 +4,9 @@ import { useQueryParams } from "raviger";
 import { Form } from "../types/formTypes";
 import Modal from "./common/Modal";
 import CreateForm from "./CreateForm";
-import { deleteForm, listForms } from "../utils/apiUtils";
+import { deleteForm, listForms, me } from "../utils/apiUtils";
 import { Pagination } from "../types/common";
+import { User } from "../types/userTypes";
 
 const fetchForms = async (setFormCB: (value: Form[]) => void) => {
   try {
@@ -22,11 +23,18 @@ const fetchForms = async (setFormCB: (value: Form[]) => void) => {
 export default function Home() {
   const [{ search }, setQuery] = useQueryParams();
   const [searchString, setSearchString] = useState("");
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [forms, setForms] = useState<Form[]>(() => {
     const localForms = localStorage.getItem("allForms");
     return localForms ? JSON.parse(localForms) : [];
   });
   const [newForm, setNewForm] = useState(false);
+
+  useEffect(() => {
+    me().then((data) => {
+      setCurrentUser(data.results[0]);
+    });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("allForms", JSON.stringify(forms));
@@ -65,8 +73,13 @@ export default function Home() {
         addFormCB={() => setNewForm(true)}
         removeFormCB={removeForm}
         search={search}
+        currentUser={currentUser}
       />
-      <Modal open={newForm} closeCB={() => setNewForm(false)}>
+      <Modal
+        open={newForm}
+        currentUser={currentUser}
+        closeCB={() => setNewForm(false)}
+      >
         <CreateForm />
       </Modal>
     </div>
