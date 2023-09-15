@@ -36,7 +36,7 @@ export const AllForms = (prop: {
             .map((form: Form) => (
               <div
                 key={form.id}
-                className="grid grid-cols-4 gap-4 m-2 p-2 w-full mx-5  bg-blue-500 text-white items-center rounded-xl focus:outline-none focus:shadow-outline-blue"
+                className="grid grid-cols-4 gap-4 m-2 p-2 w-full mx-5  bg-blue-500 text-white items-center rounded-xl  focus:shadow-outline-blue"
               >
                 <p className=" ml-3 text-center text-lg col-span-2 break-words font-bold">
                   {form.title}
@@ -164,7 +164,7 @@ export const AllForms = (prop: {
         </div>
         <button
           onClick={(_) => prop.addFormCB()}
-          className="bg-green-500 ml-auto hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-green active:bg-green-800"
+          className="bg-green-500 ml-auto hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg mr-2  focus:shadow-outline-green active:bg-green-800"
         >
           ➕ Add Form
         </button>

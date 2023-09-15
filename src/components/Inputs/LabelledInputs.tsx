@@ -25,7 +25,7 @@ export default function LabelledInputs(props: LabelledInputsProps) {
           <label className="text-xl mb-2 mx-auto">{props.fieldType}</label>
         </div>
         <button
-          className="ml-2 my-auto bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg px-3 py-2 focus:outline-none focus:shadow-outline-red active:bg-red-500"
+          className="ml-2 my-auto bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg px-3 py-2  focus:shadow-outline-red active:bg-red-500"
           onClick={() => props.removeFieldCB(props.id)}
         >
           <svg

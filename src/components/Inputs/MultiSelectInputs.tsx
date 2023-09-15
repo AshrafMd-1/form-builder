@@ -42,7 +42,7 @@ export default function MultiSelectInputs(props: MultiSelectInputsProps) {
           <label className="text-xl mb-2 mx-auto">{props.kind}</label>
         </div>
         <button
-          className="ml-2 my-auto bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg px-3 py-2 focus:outline-none focus:shadow-outline-red active:bg-red-500"
+          className="ml-2 my-auto bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg px-3 py-2  focus:shadow-outline-red active:bg-red-500"
           onClick={() => props.removeFieldCB(props.id)}
         >
           <svg
@@ -102,7 +102,7 @@ export default function MultiSelectInputs(props: MultiSelectInputsProps) {
         </div>
         <div className="flex flex-col mb-auto mr-auto ">
           <input
-            className="border-2 mt-2 border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m focus:outline-none invalid:border-red-500"
+            className="border-2 mt-2 border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m  invalid:border-red-500"
             type="text"
             name="label"
             placeholder="New Option"
@@ -112,7 +112,7 @@ export default function MultiSelectInputs(props: MultiSelectInputsProps) {
             }}
           />
           <button
-            className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-3 py-2 focus:outline-none focus:shadow-outline-red"
+            className="mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg px-3 py-2  focus:shadow-outline-red"
             onClick={() => {
               props.addOptionCB(props.id, props.label, props.kind, optionInput);
               setOptionInput("");

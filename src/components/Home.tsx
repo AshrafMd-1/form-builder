@@ -8,7 +8,7 @@ import { deleteForm, listForms, me } from "../utils/apiUtils";
 import { Pagination } from "../types/common";
 import { User } from "../types/userTypes";
 
-const fetchForms = async (setFormCB: (value: Form[]) => void) => {
+export const fetchForms = async (setFormCB: (value: Form[]) => void) => {
   try {
     const data: Pagination<Form> = await listForms({
       offset: 0,
@@ -60,7 +60,7 @@ export default function Home() {
         >
           <label className="mr-2">Search</label>
           <input
-            className="border-2 border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m focus:outline-none"
+            className="border-2 border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m "
             type="search"
             name="search"
             value={searchString}

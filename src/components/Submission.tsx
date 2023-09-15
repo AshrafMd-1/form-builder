@@ -24,7 +24,7 @@ export const Submission = (props: { formId: number }) => {
           {submissions.map((submission: any, index) => (
             <div
               key={index}
-              className="grid grid-cols-4 gap-4 m-2 p-2 w-full mx-5  bg-blue-500 text-white items-center rounded-xl focus:outline-none focus:shadow-outline-blue"
+              className="grid grid-cols-4 gap-4 m-2 p-2 w-full mx-5  bg-blue-500 text-white items-center rounded-xl  focus:shadow-outline-blue"
             >
               <p className=" ml-3 text-center text-lg col-span-2 break-words font-bold">
                 Submission - {index + 1}

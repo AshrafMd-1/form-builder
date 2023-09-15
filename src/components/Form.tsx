@@ -350,7 +350,7 @@ export default function Form(props: { formId: number }) {
           <input
             type="Text"
             value={state.title}
-            className="border-2 mb-1 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
+            className="border-2 mb-1 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg  focus:border-blue-500"
             placeholder="New Form Title"
             onChange={(e) => {
               dispatch({ type: "change_form_title", title: e.target.value });
@@ -365,14 +365,14 @@ export default function Form(props: { formId: number }) {
           <input
             type="text"
             value={newField.value}
-            className="border-2 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
+            className="border-2 border-gray-300 rounded-md  mt-1 w-full h-10 px-2 text-lg  focus:border-blue-500"
             placeholder="New Field Title"
             onChange={(e) => {
               setNewField({ ...newField, value: e.target.value });
             }}
           />
           <select
-            className="border-2 border-gray-300 rounded-md  mt-1  h-10 px-2 text-lg focus:outline-none focus:border-blue-500"
+            className="border-2 border-gray-300 rounded-md  mt-1  h-10 px-2 text-lg  focus:border-blue-500"
             onChange={(e) => {
               const chosenInput = e.target.value;
               setNewField({ ...newField, fieldType: chosenInput });
@@ -382,7 +382,7 @@ export default function Form(props: { formId: number }) {
             <Options />
           </select>
           <button
-            className="mt-auto mb-auto ml-2 bg-blue-500 hover:bg-blue-600 text-white pl-3 pr-3 font-bold  rounded-lg focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+            className="mt-auto mb-auto ml-2 bg-blue-500 hover:bg-blue-600 text-white pl-3 pr-3 font-bold  rounded-lg  focus:shadow-outline-blue active:bg-blue-800"
             onClick={async () => {
               let newForm: formField;
               switch (newField.fieldType) {
@@ -432,12 +432,12 @@ export default function Form(props: { formId: number }) {
         <div className="flex justify-end">
           <button
             onClick={() => saveFormData(state)}
-            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-green active:bg-green-800"
+            className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg mr-2  focus:shadow-outline-green active:bg-green-800"
           >
             Save
           </button>
           <Link
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 focus:outline-none focus:shadow-outline-blue active:bg-blue-800"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2  focus:shadow-outline-blue active:bg-blue-800"
             href="/"
           >
             Close Form

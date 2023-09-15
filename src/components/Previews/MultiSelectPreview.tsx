@@ -29,7 +29,7 @@ export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
   return (
     <div className="relative">
       <button
-        className="border mt-2 px-4 py-2 rounded-lg hover:bg-gray-100 focus:outline-none"
+        className="border mt-2 px-4 py-2 rounded-lg hover:bg-gray-100 "
         onClick={toggleDropdown}
       >
         Open Dropdown
@@ -43,7 +43,7 @@ export const MultiSelectPreview = (props: MultiSelectPreviewProps) => {
             >
               <input
                 type="checkbox"
-                className="form-checkbox mr-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="form-checkbox mr-2 cursor-pointer  focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 checked={props.inputValue.includes(option)}
                 onChange={() => toggleOption(option)}
               />
