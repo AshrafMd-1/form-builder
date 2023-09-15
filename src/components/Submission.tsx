@@ -9,7 +9,7 @@ export const Submission = (props: { formId: number }) => {
     getFormSubmissions(props.formId).then((data) => {
       setSubmissions(data.results);
     });
-  }, []);
+  }, [props.formId]);
 
   return (
     <div className="p-4 border  relative  border-gray-300 mb-3 rounded-lg shadow-md">
