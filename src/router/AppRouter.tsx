@@ -1,21 +1,44 @@
 import { useRoutes } from "raviger";
-import About from "../components/About";
-import Form from "../components/Form";
-import { AppContainer } from "../AppContainer";
-import Home from "../components/Home";
-import Preview from "../components/Preview";
-import { Error } from "../components/Error";
-import Login from "../components/Login";
-import { User } from "../types/userTypes";
+import React from "react";
 import { Submission } from "../components/Submission";
 import { SubmissionAnswers } from "../components/SubmissionAnswers";
+import { Error } from "../components/Error";
+import { AppContainer } from "../AppContainer";
+import { User } from "@sentry/react";
+import { ReactLoadingScreen } from "../components/ReactLoadingScreen";
+
+const Home = React.lazy(() => import("../components/Home"));
+const About = React.lazy(() => import("../components/About"));
+const Form = React.lazy(() => import("../components/Form"));
+const Preview = React.lazy(() => import("../components/Preview"));
+const Login = React.lazy(() => import("../components/Login"));
 
 const routes = {
-  "/": () => <Home />,
-  "/about": () => <About />,
-  "/login": () => <Login />,
-  "/forms/:id": ({ id }: { id: string }) => <Form formId={Number(id)} />,
-  "/preview/:id": ({ id }: { id: string }) => <Preview formId={Number(id)} />,
+  "/": () => (
+    <React.Suspense fallback={<ReactLoadingScreen />}>
+      <Home />
+    </React.Suspense>
+  ),
+  "/about": () => (
+    <React.Suspense fallback={<ReactLoadingScreen />}>
+      <About />
+    </React.Suspense>
+  ),
+  "/login": () => (
+    <React.Suspense fallback={<ReactLoadingScreen />}>
+      <Login />
+    </React.Suspense>
+  ),
+  "/forms/:id": ({ id }: { id: string }) => (
+    <React.Suspense fallback={<ReactLoadingScreen />}>
+      <Form formId={Number(id)} />
+    </React.Suspense>
+  ),
+  "/preview/:id": ({ id }: { id: string }) => (
+    <React.Suspense fallback={<ReactLoadingScreen />}>
+      <Preview formId={Number(id)} />
+    </React.Suspense>
+  ),
   "/submissions/:id": ({ id }: { id: string }) => (
     <Submission formId={Number(id)} />
   ),

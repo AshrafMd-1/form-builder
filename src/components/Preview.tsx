@@ -69,7 +69,7 @@ export default function Preview(props: { formId: number }) {
       return newForm;
     });
     return () => {};
-  }, [stateFormIndex, inputValue,state.formFields]);
+  }, [stateFormIndex, inputValue, state.formFields]);
 
   const title = state.title;
 
