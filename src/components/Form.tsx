@@ -158,7 +158,7 @@ export default function Form(props: { formId: number }) {
     };
     fetchFormDetails();
     fetchFormFields();
-  }, [props.formId]);
+  }, []);
 
   useEffect(() => {
     if (state.title === "" || state.id === 0) return;

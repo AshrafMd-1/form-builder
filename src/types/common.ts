@@ -1,4 +1,4 @@
-export type PaginationForms<T> = {
+export type Pagination<T> = {
   count: number;
   next: string | null;
   previous: string | null;
@@ -6,12 +6,6 @@ export type PaginationForms<T> = {
 };
 
 export type PaginationParams = {
-  offset: number;
-  limit: number;
-};
-
-export type PaginationData = {
-  totalCount: number;
   offset: number;
   limit: number;
 };
