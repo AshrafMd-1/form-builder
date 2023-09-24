@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Location } from "./Location";
 import { User } from "../types/userTypes";
-import { me } from "../utils/apiUtils";
-import { fetchForms } from "./Home";
+import { listAllForms, me } from "../utils/apiUtils";
 import { Form } from "../types/formTypes";
 import { navigate } from "raviger";
-import { PaginationData } from "../types/common";
+
+const fetchForms = async (
+  setFormCB: (value: Form[]) => void,
+) => {
+  try {
+    const data = await listAllForms()
+    setFormCB(data.results);
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 export default function About() {
   const [currentUser, setCurrentUser] = useState<User>(null);
@@ -13,11 +22,7 @@ export default function About() {
     const localForms = localStorage.getItem("allForms");
     return localForms ? JSON.parse(localForms) : [];
   });
-  const [pageData, setPageData] = useState<PaginationData>({
-    offset: 0,
-    limit: 10,
-    totalCount: 0,
-  });
+
 
   useEffect(() => {
     me().then((data) => {
@@ -26,7 +31,7 @@ export default function About() {
   }, []);
 
   useEffect(() => {
-    fetchForms(setForms, pageData, setPageData);
+    fetchForms(setForms);
   }, []);
 
   if (!currentUser) return <p className="text-xl text-center">Not Logged In</p>;
@@ -62,6 +67,7 @@ export default function About() {
                 <th className="border border-green-800 px-4 py-2">Edit</th>
               </tr>
             </thead>
+            <tbody>
             {forms.map((form, index) => (
               <tr key={form.id}>
                 <td className="border text-center border-green-800 px-4 py-2">
@@ -129,6 +135,7 @@ export default function About() {
                 </td>
               </tr>
             ))}
+            </tbody>
           </table>
         </div>
       </div>

@@ -9,7 +9,7 @@ import { PaginationData, PaginationForms } from "../types/common";
 import { User } from "../types/userTypes";
 import { Pagination } from "./common/Pagination";
 
-export const fetchForms = async (
+const fetchForms = async (
   setFormCB: (value: Form[]) => void,
   pageData: PaginationData,
   setPageCB: (value: PaginationData) => void,

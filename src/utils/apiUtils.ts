@@ -117,3 +117,7 @@ export const getFormSubmissions = async (formId: number) => {
 export const getSubmission = async (formId: number, submissionId: number) => {
   return request(`forms/${formId}/submission/${submissionId}/`, "GET");
 };
+
+export const listAllForms = () => {
+  return request("forms/", "GET");
+};
