@@ -158,7 +158,7 @@ export default function Form(props: { formId: number }) {
     };
     fetchFormDetails();
     fetchFormFields();
-  }, []);
+  }, [props.formId]);
 
   useEffect(() => {
     if (state.title === "" || state.id === 0) return;
@@ -170,7 +170,7 @@ export default function Form(props: { formId: number }) {
     return () => {
       clearTimeout(timeout);
     };
-  }, [state.title]);
+  }, [state.title, state.id, props.formId]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -283,7 +283,7 @@ export default function Form(props: { formId: number }) {
                             ],
                           },
                   };
-                }
+                }else return null
               });
               if (
                 newOptions[0] &&

@@ -5,14 +5,23 @@ import { Form } from "../types/formTypes";
 import Modal from "./common/Modal";
 import CreateForm from "./CreateForm";
 import { deleteForm, listForms, me } from "../utils/apiUtils";
-import { Pagination } from "../types/common";
+import { PaginationData, PaginationForms } from "../types/common";
 import { User } from "../types/userTypes";
+import { Pagination } from "./common/Pagination";
 
-const fetchForms = async (setFormCB: (value: Form[]) => void) => {
+const fetchForms = async (
+  setFormCB: (value: Form[]) => void,
+  pageData: PaginationData,
+  setPageCB: (value: PaginationData) => void,
+) => {
   try {
-    const data: Pagination<Form> = await listForms({
-      offset: 0,
-      limit: 10,
+    const data: PaginationForms<Form> = await listForms({
+      offset: pageData.offset,
+      limit: pageData.limit,
+    });
+    setPageCB({
+      ...pageData,
+      totalCount: data.count,
     });
     setFormCB(data.results);
   } catch (err) {
@@ -29,6 +38,11 @@ export default function Home() {
     return localForms ? JSON.parse(localForms) : [];
   });
   const [newForm, setNewForm] = useState(false);
+  const [pageData, setPageData] = useState<PaginationData>({
+    offset: 0,
+    limit: 10,
+    totalCount: 0,
+  });
 
   useEffect(() => {
     me().then((data) => {
@@ -41,8 +55,8 @@ export default function Home() {
   }, [forms]);
 
   useEffect(() => {
-    fetchForms(setForms);
-  }, []);
+    fetchForms(setForms, pageData, setPageData);
+  }, [pageData.offset]);
 
   const removeForm = async (id: number) => {
     await deleteForm(id);
@@ -60,7 +74,7 @@ export default function Home() {
         >
           <label className="mr-2">Search</label>
           <input
-            className="border-2 border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m focus:outline-none"
+            className="border-2 border-gray-300 bg-white h-10 px-5 pr-1 rounded-lg text-m "
             type="search"
             name="search"
             value={searchString}
@@ -75,6 +89,7 @@ export default function Home() {
         search={search}
         currentUser={currentUser}
       />
+
       <Modal
         open={newForm}
         currentUser={currentUser}
@@ -82,6 +97,7 @@ export default function Home() {
       >
         <CreateForm />
       </Modal>
+      <Pagination pageData={pageData} setPageDataCB={setPageData} />
     </div>
   );
 }
