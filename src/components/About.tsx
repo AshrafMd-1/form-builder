@@ -5,12 +5,18 @@ import { me } from "../utils/apiUtils";
 import { fetchForms } from "./Home";
 import { Form } from "../types/formTypes";
 import { navigate } from "raviger";
+import { PaginationData } from "../types/common";
 
 export default function About() {
   const [currentUser, setCurrentUser] = useState<User>(null);
   const [forms, setForms] = useState<Form[]>(() => {
     const localForms = localStorage.getItem("allForms");
     return localForms ? JSON.parse(localForms) : [];
+  });
+  const [pageData, setPageData] = useState<PaginationData>({
+    offset: 0,
+    limit: 10,
+    totalCount: 0,
   });
 
   useEffect(() => {
@@ -20,7 +26,7 @@ export default function About() {
   }, []);
 
   useEffect(() => {
-    fetchForms(setForms);
+    fetchForms(setForms, pageData, setPageData);
   }, []);
 
   if (!currentUser) return <p className="text-xl text-center">Not Logged In</p>;
