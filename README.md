@@ -1,6 +1,6 @@
 # Form Builder
 
-> **Archived** — This project was developed during a web development course. The backend is currently non-functional and the repository is no longer actively maintained.
+> **Archived** - This project was developed during a web development course. The backend is currently non-functional and the repository is no longer actively maintained.
 
 A custom form builder designed to create unique forms, featuring options like radio buttons, range sliders, and a live preview.
 
